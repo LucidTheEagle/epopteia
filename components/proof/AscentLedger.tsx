@@ -1,10 +1,13 @@
 import type { SystemData } from "./types"
 
+export const ASCENT_LEDGER_URL = "https://ascent-ledger.vercel.app/"
+
 export const ASCENT_LEDGER: SystemData = {
   id:       "ascent-ledger",
   industry: "Human Intelligence",
   name:     "ASCENT LEDGER",
   subtitle: "Individual · Performance",
+  url: ASCENT_LEDGER_URL,
   states: {
     fog: {
       heading: "The Fog",

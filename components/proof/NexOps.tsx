@@ -1,10 +1,13 @@
 import type { SystemData } from "./types"
 
+export const NEXOPS_URL = "https://nexops-three.vercel.app/"
+
 export const NEXOPS: SystemData = {
   id:       "nexops",
   industry: "Operations Command",
   name:     "NEXOPS",
   subtitle: "Logistics · Operations",
+  url: NEXOPS_URL,
   states: {
     fog: {
       heading: "The Fog",

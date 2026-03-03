@@ -1,10 +1,13 @@
 import type { SystemData } from "./types"
 
+export const PRISM_URL = "https://prism-mu-one.vercel.app/"
+
 export const PRISM: SystemData = {
   id:       "prism",
   industry: "Document Intelligence",
   name:     "PRISM",
   subtitle: "Legal · Compliance",
+  url: PRISM_URL,
   states: {
     fog: {
       heading: "The Fog",

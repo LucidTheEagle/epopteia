@@ -7,9 +7,9 @@ import { useRef } from "react"
 const PREMIUM_EASE: [number, number, number, number] = [0.16, 1, 0.3, 1]
 
 const SYSTEM_LINKS = [
-  { label: "PRISM",         href: "#systems" },
-  { label: "NexOps",        href: "#systems" },
-  { label: "Ascent Ledger", href: "#systems" },
+  { label: "PRISM",         href: "https://prism-mu-one.vercel.app/" },
+  { label: "NexOps",        href: "https://nexops-three.vercel.app/" },
+  { label: "Ascent Ledger", href: "https://ascent-ledger.vercel.app/" },
 ] as const
 
 const LEGAL_LINKS = [
@@ -73,7 +73,7 @@ export default function Footer() {
       aria-label="Epopteia site footer"
       className="
         relative w-full
-        border-t border-[rgba(255,255,255,0.07)]
+        border-t border-border
         px-6
       "
     >
@@ -128,7 +128,7 @@ export default function Footer() {
             {/* Divider */}
             <div
               aria-hidden="true"
-              className="w-8 h-px bg-[rgba(255,255,255,0.07)] mt-2"
+              className="w-8 h-px bg-border mt-2"
             />
 
             {/* Tagline */}
@@ -207,7 +207,7 @@ export default function Footer() {
             justify-between
             gap-3
             py-6
-            border-t border-[rgba(255,255,255,0.07)]
+            border-t border-border
           "
         >
           <span className="

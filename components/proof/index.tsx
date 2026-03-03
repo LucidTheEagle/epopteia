@@ -54,7 +54,13 @@ function ClearSkyContent({ data }: { data: SystemData["states"]["clearSky"] }) {
   )
 }
 
-function StackContent({ data }: { data: SystemData["states"]["stack"] }) {
+function StackContent({
+  data,
+  url,
+}: {
+  data: SystemData["states"]["stack"]
+  url:  string
+}) {
   return (
     <div className="flex flex-col gap-4">
       <span className="
@@ -83,6 +89,33 @@ function StackContent({ data }: { data: SystemData["states"]["stack"] }) {
           </li>
         ))}
       </ul>
+      {/* Live system link — only visible on stack state */}
+      <a
+        href={url}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={"View live system — opens in new tab"}
+        className="
+          group inline-flex items-center gap-2 mt-2
+          font-modern text-[10px] uppercase tracking-[0.15em]
+          text-silver
+          hover:text-alabaster
+          transition-colors duration-200
+          focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-silver
+        "
+        onClick={(e) => e.stopPropagation()}
+      >
+        View System
+        <span
+          aria-hidden="true"
+          className="
+            transition-transform duration-200
+            group-hover:translate-x-1
+          "
+        >
+          →
+        </span>
+      </a>
     </div>
   )
 }
@@ -215,7 +248,7 @@ export function SystemCard({ system, inView, index, isMobile }: SystemCardProps)
         aria-hidden="true"
         className="
           absolute top-0 left-0
-          h-px w-0 bg-silver
+          h-px w-0 bg-border
           transition-[width] duration-500
           group-hover:w-full
         "
@@ -272,7 +305,7 @@ export function SystemCard({ system, inView, index, isMobile }: SystemCardProps)
               <ClearSkyContent data={system.states.clearSky} />
             )}
             {activeState === 2 && (
-              <StackContent data={system.states.stack} />
+              <StackContent data={system.states.stack} url={system.url} />
             )}
           </motion.div>
         </AnimatePresence>

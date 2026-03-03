@@ -28,6 +28,7 @@ export interface FogState {
     name:     string
     subtitle: string
     states:   SystemStates
+    url:      string        /* Live deployment URL */
   }
   
   export type CarouselState = 0 | 1 | 2
