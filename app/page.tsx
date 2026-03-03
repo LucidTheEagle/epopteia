@@ -9,19 +9,6 @@ import FinalCTA      from "@/components/FinalCTA"
 import Footer        from "@/components/Footer"
 import LazySection   from "@/components/LazySection"
 
-/**
- * Page section order — locked to wireframe spec:
- *
- * 00  Navigation     — fixed, above all
- * 01  Hero           — above the fold, no lazy load
- * 02  TheFog         — first below-fold section
- * 03  Identity       — name, mission, four laws
- * 04  Systems        — three proof cards with carousel
- * 05  WhoThisIsFor   — the filter
- * 06  Philosophy     — Law of Altitude, TracingBeam
- * 07  FinalCTA       — closing declaration
- * 08  Footer         — brand, links, legal
- */
 export default function Home() {
   return (
     <>
