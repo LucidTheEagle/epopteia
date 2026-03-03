@@ -1,63 +1,64 @@
-import Hero from "@/components/Hero";
-import Navigation from "@/components/Navigation";
-import Identity from "@/components/Identity";
-import TheFog from "@/components/TheFog";
-import Systems from "@/components/Systems";
-import Pricing from "@/components/Pricing";
-import HowItWorks from "@/components/HowItWorks";
-import Proof from "@/components/proof";
-import FinalCTA from "@/components/FinalCTA";
-import Footer from "@/components/Footer";
-import LazySection from "@/components/LazySection";
-// import PerformanceMonitor from "@/components/PerformanceMonitor";
+import Navigation    from "@/components/Navigation"
+import Hero          from "@/components/Hero"
+import TheFog        from "@/components/TheFog"
+import Identity      from "@/components/Identity"
+import Systems       from "@/components/Systems"
+import WhoThisIsFor  from "@/components/WhoThisIsFor"
+import Philosophy    from "@/components/Philosophy"
+import FinalCTA      from "@/components/FinalCTA"
+import Footer        from "@/components/Footer"
+import LazySection   from "@/components/LazySection"
 
+/**
+ * Page section order — locked to wireframe spec:
+ *
+ * 00  Navigation     — fixed, above all
+ * 01  Hero           — above the fold, no lazy load
+ * 02  TheFog         — first below-fold section
+ * 03  Identity       — name, mission, four laws
+ * 04  Systems        — three proof cards with carousel
+ * 05  WhoThisIsFor   — the filter
+ * 06  Philosophy     — Law of Altitude, TracingBeam
+ * 07  FinalCTA       — closing declaration
+ * 08  Footer         — brand, links, legal
+ */
 export default function Home() {
   return (
-    <main className="bg-obsidian min-h-screen antialiased selection:bg-lucid selection:text-obsidian">
-      {/* Performance Monitor - Development Only */}
-      {/* <PerformanceMonitor /> */}
-      
-      {/* NAVIGATION - Above the fold */}
+    <>
+      {/* ── NAVIGATION — fixed, renders above everything ─────────────── */}
       <Navigation />
-      
-      {/* HERO - Above the fold, highest priority */}
+
+      {/* ── ABOVE THE FOLD — no lazy load, highest priority ──────────── */}
       <Hero />
-      
-      {/* CREED - First below-the-fold section */}
-      <Identity />
-      
-      {/* PROBLEM - Lazy loaded */}
+
+      {/* ── BELOW THE FOLD — lazy loaded at 200px rootMargin ─────────── */}
       <LazySection rootMargin="200px">
         <TheFog />
       </LazySection>
-      
-      {/* SYSTEMS - Lazy loaded */}
+
+      <LazySection rootMargin="200px">
+        <Identity />
+      </LazySection>
+
       <LazySection rootMargin="200px">
         <Systems />
       </LazySection>
-      
-      {/* HOW IT WORKS - Lazy loaded */}
+
       <LazySection rootMargin="200px">
-        <HowItWorks />
+        <WhoThisIsFor />
       </LazySection>
-      
-      {/* PRICING - Lazy loaded */}
+
       <LazySection rootMargin="200px">
-        <Pricing />
+        <Philosophy />
       </LazySection>
-      
-      {/* PROOF - Lazy loaded */}
-      <LazySection rootMargin="200px">
-        <Proof />
-      </LazySection>
-      
-      {/* FINAL CTA - Lazy loaded */}
+
+      {/* ── FINAL CTA — tighter rootMargin, loads closer to viewport ─── */}
       <LazySection rootMargin="100px">
         <FinalCTA />
       </LazySection>
-      
-      {/* FOOTER */}
+
+      {/* ── FOOTER — no lazy load, lightweight ───────────────────────── */}
       <Footer />
-    </main>
-  );
+    </>
+  )
 }
