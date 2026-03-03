@@ -1,55 +1,60 @@
 @import "tailwindcss";
 
 @theme {
-  /* FONTS */
-  --font-family-ancient: var(--font-ancient);
-  --font-family-modern: var(--font-modern);
-  
-  /* COLORS - Digital Stone */
-  --color-obsidian: #050505;
-  --color-basalt: #111111;
-  --color-alabaster: #e5e5e5;
-  --color-granite: #737373;
-  --color-lucid: #00f0ff;
-  --color-lapis: #3b82f6;
+  /* ── TYPOGRAPHY ─────────────────────────────────────────────────────────── */
+  --font-family-ancient: var(--font-ancient); /* Cinzel — authority          */
+  --font-family-modern:  var(--font-modern);  /* JetBrains Mono — precision  */
+
+  /* ── CORE PALETTE — Epopteia Design System ──────────────────────────────── */
+  --color-obsidian:    #050505; /* Page background                            */
+  --color-basalt:      #111111; /* Card / surface background                  */
+  --color-basalt-lift: #161616; /* Card hover background                      */
+  --color-alabaster:   #e5e5e5; /* Primary text                               */
+  --color-granite:     #737373; /* Secondary text                             */
+  --color-silver:      #C0C0C0; /* Crystalline Silver — primary accent        */
+  --color-silver-dim:  #666666; /* Silver muted — decorative / secondary uses */
+
+  /* ── BORDERS ────────────────────────────────────────────────────────────── */
+  --color-border:        rgba(255, 255, 255, 0.07);
+  --color-border-active: rgba(255, 255, 255, 0.12);
+  --color-border-silver: rgba(192, 192, 192, 0.25);
 }
 
-/* BASE STYLES */
-* {
+/* ── RESET ───────────────────────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  /* Hardware acceleration for all transforms */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* ── BASE ────────────────────────────────────────────────────────────────── */
 body {
   background-color: var(--color-obsidian);
   color: var(--color-alabaster);
   font-family: var(--font-family-modern), monospace;
   line-height: 1.7;
-  overflow-x: hidden; /* Prevent horizontal scroll drift */
+  overflow-x: hidden;
 }
 
-/* HIGH PERFORMANCE NOISE TEXTURE */
-/* Fixed pseudo-element instead of background-attachment: fixed */
+/* ── NOISE TEXTURE OVERLAY ───────────────────────────────────────────────── */
+/*    Fixed pseudo-element: GPU-composited, no repaint on scroll              */
 body::before {
   content: "";
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
+  inset: 0;
   z-index: -1;
   pointer-events: none;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
   opacity: 0.4;
-  /* Force GPU Acceleration */
-  transform: translateZ(0); 
+  transform: translateZ(0);
   will-change: transform;
 }
 
+/* ── TYPOGRAPHY DEFAULTS ─────────────────────────────────────────────────── */
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-family-ancient), serif;
   font-weight: 700;
@@ -57,79 +62,132 @@ h1, h2, h3, h4, h5, h6 {
   letter-spacing: 0.05em;
 }
 
-/* UTILITY CLASSES */
-.text-ancient { font-family: var(--font-family-ancient), serif; }
-.text-modern { font-family: var(--font-family-modern), monospace; }
-.sharp { border-radius: 0; }
+/* ── SCROLLBAR ───────────────────────────────────────────────────────────── */
+::-webkit-scrollbar       { width: 3px; }
+::-webkit-scrollbar-track { background: var(--color-obsidian); }
+::-webkit-scrollbar-thumb { background: var(--color-silver-dim); }
 
-/* OPTIMIZED STONE CARD */
+/* ── SELECTION ───────────────────────────────────────────────────────────── */
+::selection {
+  background-color: var(--color-silver);
+  color: var(--color-obsidian);
+}
+
+/* ── UTILITY CLASSES ─────────────────────────────────────────────────────── */
+.text-ancient { font-family: var(--font-family-ancient), serif; }
+.text-modern  { font-family: var(--font-family-modern),  monospace; }
+.sharp        { border-radius: 0 !important; }
+
+/* ── STONE CARD ──────────────────────────────────────────────────────────── */
+/*    Base card surface used across all sections                              */
 .stone-card {
   background-color: var(--color-basalt);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid var(--color-border);
+  transition:
+    border-color  0.3s ease,
+    background    0.3s ease,
+    box-shadow    0.3s ease;
   will-change: border-color, box-shadow;
 }
 
 .stone-card:hover {
-  border-color: var(--color-lucid);
-  box-shadow: 0 0 20px rgba(0, 240, 255, 0.2);
+  background-color: var(--color-basalt-lift);
+  border-color: var(--color-border-silver);
+  box-shadow: 0 0 24px rgba(192, 192, 192, 0.06);
 }
 
-/* MONOLITH BUTTON */
+/* Touch devices: suppress heavy hover effects */
+@media (hover: none) {
+  .stone-card:hover {
+    background-color: var(--color-basalt);
+    border-color: var(--color-border);
+    box-shadow: none;
+  }
+}
+
+/* ── MONOLITH BUTTON ─────────────────────────────────────────────────────── */
+/*    Sharp-edge CTA — Crystalline Silver treatment                           */
 .monolith-btn {
   font-family: var(--font-family-modern), monospace;
+  font-size: 11px;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
-  padding: 1rem 2rem;
-  border: 1px solid var(--color-lucid);
+  letter-spacing: 0.15em;
+  padding: 1rem 2.5rem;
+  border: 1px solid var(--color-silver);
   background: transparent;
-  color: var(--color-lucid);
-  transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+  color: var(--color-silver);
   cursor: pointer;
   position: relative;
   overflow: hidden;
+  transition:
+    color       0.3s ease,
+    transform   0.2s ease;
+}
+
+/* Fill sweep — left to right on hover */
+.monolith-btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--color-silver);
+  transform: translateX(-101%);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .monolith-btn:hover {
-  background: var(--color-lucid);
   color: var(--color-obsidian);
-  box-shadow: 0 0 30px rgba(0, 240, 255, 0.4);
+  transform: translateY(-1px);
 }
 
-/* MOBILE OPTIMIZATIONS */
-@media (max-width: 768px) {
-  /* Reduce noise opacity on mobile to save battery/rendering cost */
-  body::before {
-    opacity: 0.2;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.5' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
-  }
-  
-  /* Disable heavy hover effects on touch devices */
-  @media (hover: none) {
-    .stone-card:hover {
-      box-shadow: none;
-      border-color: rgba(255, 255, 255, 0.1);
-    }
-    
-    .monolith-btn:hover {
-      box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
-    }
+.monolith-btn:hover::before {
+  transform: translateX(0);
+}
+
+/* Ensure text renders above the fill layer */
+.monolith-btn > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Touch devices */
+@media (hover: none) {
+  .monolith-btn:hover {
+    transform: none;
   }
 }
 
-/* PREFERS REDUCED MOTION */
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
+/* ── HAIRLINE GRID SYSTEM ────────────────────────────────────────────────── */
+/*    1px gap grid pattern used across Fog, Identity, Systems, Footer        */
+.hairline-grid {
+  gap: 1px;
+  background-color: var(--color-border);
 }
 
-/* ANIMATIONS */
+.hairline-grid > * {
+  background-color: var(--color-obsidian);
+}
+
+.hairline-grid--card > * {
+  background-color: var(--color-basalt);
+}
+
+/* ── SECTION LABEL ───────────────────────────────────────────────────────── */
+.section-label {
+  font-family: var(--font-family-modern), monospace;
+  font-size: 10px;
+  letter-spacing: 0.35em;
+  color: var(--color-silver);
+  text-transform: uppercase;
+}
+
+.section-label::before {
+  content: "— ";
+  color: var(--color-silver-dim);
+}
+
+/* ── SPOTLIGHT ANIMATION (Hero) ──────────────────────────────────────────── */
 @keyframes spotlight {
-  0% { opacity: 0; transform: translate(-72%, -62%) scale(0.5); }
+  0%   { opacity: 0; transform: translate(-72%, -62%) scale(0.5); }
   100% { opacity: 1; transform: translate(-50%, -40%) scale(1); }
 }
 
@@ -137,26 +195,74 @@ h1, h2, h3, h4, h5, h6 {
   animation: spotlight 2s ease 0.75s 1 forwards;
 }
 
+/* ── SHIMMER / SPIN (retained from Lucid ui components) ──────────────────── */
 @theme inline {
   --animate-shimmer-slide: shimmer-slide var(--speed) ease-in-out infinite alternate;
-  --animate-spin-around: spin-around calc(var(--speed) * 2) infinite linear;
+  --animate-spin-around:   spin-around calc(var(--speed) * 2) infinite linear;
 
   @keyframes shimmer-slide {
     to { transform: translate(calc(100cqw - 100%), 0); }
   }
+
   @keyframes spin-around {
-    0% { transform: translateZ(0) rotate(0); }
-    15%, 35% { transform: translateZ(0) rotate(90deg); }
-    65%, 85% { transform: translateZ(0) rotate(270deg); }
-    100% { transform: translateZ(0) rotate(360deg); }
+    0%         { transform: translateZ(0) rotate(0); }
+    15%, 35%   { transform: translateZ(0) rotate(90deg); }
+    65%, 85%   { transform: translateZ(0) rotate(270deg); }
+    100%       { transform: translateZ(0) rotate(360deg); }
   }
 }
 
+/* ── SCAN LINE (retained for potential system card use) ──────────────────── */
 @keyframes scan-line {
-  0% { left: -100%; }
-  50%, 100% { left: 100%; }
+  0%       { left: -100%; }
+  50%, 100%{ left:  100%; }
 }
 
 .animate-scan-line {
   animation: scan-line 3s linear infinite;
+}
+
+/* ── SACRED GEOMETRY ROTATION (Hero background rings) ───────────────────── */
+@keyframes geo-rotate {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to   { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+@keyframes geo-rotate-reverse {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to   { transform: translate(-50%, -50%) rotate(-360deg); }
+}
+
+.animate-geo-rotate         { animation: geo-rotate         120s linear infinite; }
+.animate-geo-rotate-reverse { animation: geo-rotate-reverse  60s linear infinite; }
+
+/* ── SCROLL INDICATOR PULSE ──────────────────────────────────────────────── */
+@keyframes scroll-pulse {
+  0%, 100% { opacity: 0.3; transform: scaleY(1); }
+  50%       { opacity: 1;   transform: scaleY(0.6); }
+}
+
+.animate-scroll-pulse {
+  animation: scroll-pulse 2s ease-in-out infinite;
+}
+
+/* ── MOBILE OPTIMISATIONS ────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  /* Reduce noise texture cost on mobile */
+  body::before {
+    opacity: 0.2;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.5' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
+  }
+}
+
+/* ── REDUCED MOTION ──────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration:       0.01ms !important;
+    animation-iteration-count: 1     !important;
+    transition-duration:       0.01ms !important;
+    scroll-behavior:           auto  !important;
+  }
 }
