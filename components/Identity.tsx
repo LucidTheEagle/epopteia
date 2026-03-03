@@ -116,7 +116,7 @@ export default function Identity() {
     <section
       id="identity"
       aria-labelledby="identity-heading"
-      className="relative w-full py-32 md:py-40 px-6"
+      className="relative w-full py-32 md:py-40 px-6 section-surface-alt geo-diagonal-overlay overflow-hidden"
     >
       <div className="max-w-[1280px] mx-auto">
 
@@ -138,7 +138,7 @@ export default function Identity() {
           className="
             grid grid-cols-1 md:grid-cols-2
             gap-px
-            bg-[rgba(255,255,255,0.07)]
+          bg-border
             mb-px
           "
         >
@@ -164,7 +164,7 @@ export default function Identity() {
               className="
                 font-ancient font-black
                 text-[clamp(36px,5vw,64px)]
-                tracking-[0.1em] leading-none
+                tracking-widest leading-none
                 text-alabaster
               "
             >
@@ -250,7 +250,7 @@ export default function Identity() {
             sm:grid-cols-2
             lg:grid-cols-4
             gap-px
-            bg-[rgba(255,255,255,0.07)]
+            bg-border
           "
         >
           {LAWS.map((law, i) => (

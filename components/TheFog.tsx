@@ -112,7 +112,7 @@ function FogCard({ card, index, inView }: FogCardProps) {
       {/* Diagnostic tag */}
       <div className="
         mt-8 pt-6
-        border-t border-[rgba(255,255,255,0.07)]
+        border-t border-border
       ">
         <span className="
           font-modern text-[10px] uppercase tracking-[0.15em]
@@ -140,7 +140,7 @@ export default function TheFog() {
       id="fog"
       ref={sectionRef}
       aria-labelledby="fog-heading"
-      className="relative w-full py-32 md:py-40 px-6"
+      className="relative w-full py-32 md:py-40 px-6 section-surface-alt geo-corner-accent overflow-hidden"
     >
       <div className="max-w-[1280px] mx-auto">
 
@@ -190,7 +190,7 @@ export default function TheFog() {
             md:grid-cols-2
             lg:grid-cols-3
             gap-px
-            bg-[rgba(255,255,255,0.07)]
+            bg-border
           "
         >
           {FOG_STATES.map((card, i) => (
@@ -207,7 +207,7 @@ export default function TheFog() {
           transition={{ delay: 0.6, duration: 0.8, ease: PREMIUM_EASE }}
           style={{ transformOrigin: "left", willChange: "transform" }}
           aria-hidden="true"
-          className="mt-16 h-px bg-[rgba(255,255,255,0.07)]"
+          className="mt-16 h-px bg-border"
         />
 
       </div>

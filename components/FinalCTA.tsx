@@ -26,7 +26,7 @@ function StaticRings() {
           viewBox="0 0 700 700"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
-          className="w-full h-full opacity-[0.03]"
+          className="w-full h-full opacity-[0.06]"
         >
           <circle cx="350" cy="350" r="348" stroke="#C0C0C0" strokeWidth="0.5" />
           <circle cx="350" cy="350" r="240" stroke="#C0C0C0" strokeWidth="0.5" />
@@ -45,9 +45,9 @@ function StaticRings() {
       <div
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none"
         style={{
-          width:      "500px",
-          height:     "500px",
-          background: "radial-gradient(circle, rgba(192,192,192,0.05) 0%, transparent 70%)",
+          width:      "700px",
+          height:     "700px",
+          background: "radial-gradient(ellipse 60% 50% at 50% 50%, rgba(192,192,192,0.09) 0%, rgba(192,192,192,0.04) 40%, transparent 70%)",
         }}
       />
     </div>
@@ -75,8 +75,9 @@ export default function FinalCTA() {
         relative w-full
         py-40 md:py-56
         px-6
-        border-t border-[rgba(255,255,255,0.07)]
+        border-t border-border
         overflow-hidden
+        geo-grid-overlay
       "
     >
       {/* Static geometry rings — distinct from Hero's rotating rings */}
@@ -119,7 +120,7 @@ export default function FinalCTA() {
               font-ancient font-black
               text-[clamp(36px,6vw,80px)]
               tracking-[0.06em] leading-[1.1]
-              text-alabaster
+              text-white
               max-w-[700px]
             "
           >

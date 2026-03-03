@@ -266,3 +266,81 @@ h1, h2, h3, h4, h5, h6 {
     scroll-behavior:           auto  !important;
   }
 }
+
+/* ── SECTION RHYTHM ──────────────────────────────────────────────────────── */
+/*    Alternating surface treatment — creates visual breathing room          */
+.section-surface-alt {
+  background-color: var(--color-basalt);
+  position: relative;
+}
+
+/* ── GEOMETRIC LINE PATTERNS ─────────────────────────────────────────────── */
+/*    Subtle SVG grid overlay for key sections — GPU composited              */
+.geo-grid-overlay::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image:
+    linear-gradient(rgba(192,192,192,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(192,192,192,0.025) 1px, transparent 1px);
+  background-size: 80px 80px;
+  mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 40%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 40%, transparent 100%);
+}
+
+/* Diagonal variant — used on Identity */
+.geo-diagonal-overlay::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image:
+    repeating-linear-gradient(
+      45deg,
+      rgba(192,192,192,0.018) 0px,
+      rgba(192,192,192,0.018) 1px,
+      transparent 1px,
+      transparent 60px
+    );
+  mask-image: radial-gradient(ellipse 70% 70% at 50% 50%, black 30%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 70% 70% at 50% 50%, black 30%, transparent 100%);
+}
+
+/* Corner accent lines — used on TheFog */
+.geo-corner-accent::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 200px;
+  height: 200px;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    linear-gradient(rgba(192,192,192,0.04) 1px, transparent 1px) 0 0 / 20px 20px,
+    linear-gradient(90deg, rgba(192,192,192,0.04) 1px, transparent 1px) 0 0 / 20px 20px;
+  mask-image: radial-gradient(circle at top right, black 0%, transparent 70%);
+  -webkit-mask-image: radial-gradient(circle at top right, black 0%, transparent 70%);
+}
+
+/* ── FINALCTA BOOST ──────────────────────────────────────────────────────── */
+.cta-glow-strong {
+  background: radial-gradient(
+    ellipse 60% 50% at 50% 50%,
+    rgba(192,192,192,0.07) 0%,
+    rgba(192,192,192,0.03) 40%,
+    transparent 70%
+  );
+}
+
+/* ── REDUCED MOTION — geometry overlays ─────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .geo-grid-overlay::before,
+  .geo-diagonal-overlay::before,
+  .geo-corner-accent::after {
+    display: none;
+  }
+}

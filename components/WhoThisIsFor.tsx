@@ -18,7 +18,7 @@ export default function WhoThisIsFor() {
       id="filter"
       ref={sectionRef}
       aria-labelledby="filter-heading"
-      className="relative w-full py-32 md:py-40 px-6"
+      className="relative w-full py-32 md:py-40 px-6 geo-grid-overlay overflow-hidden"
     >
       <div className="max-w-[1280px] mx-auto">
 

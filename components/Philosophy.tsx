@@ -75,7 +75,7 @@ export default function Philosophy() {
       id="philosophy"
       ref={sectionRef}
       aria-labelledby="philosophy-heading"
-      className="relative w-full py-32 md:py-40 px-6"
+      className="relative w-full py-32 md:py-40 px-6 section-surface-alt overflow-hidden"
     >
       <div className="max-w-[1280px] mx-auto">
 
@@ -153,7 +153,7 @@ export default function Philosophy() {
               className="
                 font-ancient font-black
                 text-[80px] leading-none tracking-tight
-                text-border-silver
+                text-[rgba(192,192,192,0.04)]
                 mt-auto select-none
               "
             >
@@ -239,7 +239,7 @@ export default function Philosophy() {
         {/*    TracingBeam's absolute-positioned SVG uses -left-4 md:-left-20  */}
         {/*    On mobile this collapses — the section reads cleanly as prose   */}
 
-      </div>    
+      </div>
     </section>
   )
 }
