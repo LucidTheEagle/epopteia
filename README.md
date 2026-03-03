@@ -1,220 +1,119 @@
-# 🦅 LUCID SYSTEMS
+# EPOPTEIA
 
-**Clarity. Altitude. Systems.**
+**Supreme Vision. Clarity Architecture.**
 
-AI-powered operational intelligence systems for high-volume businesses. Built by Lucid the Eagle.
-
----
-
-## 🎯 Overview
-
-Lucid Systems provides three core intelligence systems:
-
-- **The Prism**: Intelligent data fracturing and extraction
-- **The Sentry**: Autonomous triage and qualification engine  
-- **The Overwatch**: Predictive analytics and forecasting platform
-
-Built for recruitment agencies, operations-heavy businesses, sales teams, and scaling startups drowning in manual work.
+AI-powered clarity systems for founders, operators, and high-performers operating in fog.
 
 ---
 
-## 🚀 Tech Stack
+## Overview
+
+Epopteia provides three live intelligence systems:
+
+- **PRISM** — Document intelligence and compliance verification
+- **NexOps** — Zero-latency operations command and logistics intelligence
+- **Ascent Ledger** — AI-powered human performance diagnostic system
+
+---
+
+## Tech Stack
 
 - **Framework**: Next.js 16.1.0 (App Router)
 - **Styling**: Tailwind CSS v4
-- **Animations**: Framer Motion
-- **Icons**: Lucide React
-- **Fonts**: Cinzel (serif) + JetBrains Mono (monospace)
+- **Animations**: Framer Motion v12
+- **Fonts**: Cinzel + JetBrains Mono
 - **Deployment**: Vercel
 
 ---
 
-## 🛠️ Local Development
-
+## Local Development
 ```bash
-# Install dependencies
 npm install
-
-# Run development server
 npm run dev
-
-# Build for production
 npm run build
-
-# Start production server
-npm start
 ```
-
-Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ---
 
-## 📁 Project Structure
-
+## Project Structure
 ```
-lucid-systems/
+epopteia/
 ├── app/
-│   ├── layout.tsx          # Root layout with metadata
-│   ├── page.tsx            # Landing page
-│   ├── globals.css         # Global styles + Tailwind
-│   ├── not-found.tsx       # Custom 404 page
-│   ├── privacy/page.tsx    # Privacy Policy
-│   ├── terms/page.tsx      # Terms of Service
-│   └── msa/page.tsx        # Master Services Agreement
+│   ├── layout.tsx
+│   ├── page.tsx
+│   ├── globals.css
+│   ├── not-found.tsx
+│   ├── privacy/page.tsx
+│   ├── terms/page.tsx
+│   └── msa/page.tsx
 ├── components/
-│   ├── Navigation.tsx      # Fixed header
-│   ├── Hero.tsx            # Hero section
-│   ├── Creed.tsx           # Manifesto section
-│   ├── Problem.tsx         # Pain point diagnosis
-│   ├── Systems.tsx         # Product cards (Prism/Sentry/Overwatch)
-│   ├── HowItWorks.tsx      # 4-step process
-│   ├── Pricing.tsx         # Deployment tiers
-│   ├── Proof/              # System demonstrations
-│   │   ├── index.tsx       # Proof section wrapper
-│   │   ├── Prism.tsx       # Data fracturing demo
-│   │   ├── Sentry.tsx      # Triage simulation
-│   │   └── Overwatch.tsx   # Analytics demo
-│   ├── FinalCTA.tsx        # Final conversion section
-│   └── Footer.tsx          # Footer with links
-├── public/
-│   ├── og.png              # Open Graph image (1200x630)
-│   ├── favicon.ico         # Browser icon
-│   └── apple-touch-icon.png # iOS icon
-└── lib/
-    └── hooks/              # Reusable React hooks
+│   ├── Navigation.tsx
+│   ├── Hero.tsx
+│   ├── TheFog.tsx
+│   ├── Identity.tsx
+│   ├── Systems.tsx
+│   ├── WhoThisIsFor.tsx
+│   ├── Philosophy.tsx
+│   ├── FinalCTA.tsx
+│   ├── Footer.tsx
+│   ├── LazySection.tsx
+│   └── proof/
+│       ├── index.tsx
+│       ├── types.ts
+│       ├── Prism.tsx
+│       ├── NexOps.tsx
+│       └── AscentLedger.tsx
+└── components/ui/
+    ├── spotlight.tsx
+    ├── tracing-beam.tsx
+    └── text-generate-effect.tsx
 ```
 
 ---
 
-## 🎨 Design System
-
-### **Ancient Modern Aesthetic**
-
-- **Sharp Edges**: Zero rounded corners (0px border-radius)
-- **Stone Colors**: Dark backgrounds + cyan accents
-- **Typography**: Cinzel (authority) + JetBrains Mono (precision)
-- **Animations**: Premium cubic-bezier easing `[0.25, 0.1, 0.25, 1.0]`
-
-### **Color Palette**
-
+## Design Tokens
 ```css
---color-obsidian: #050505;   /* Background */
---color-basalt: #111111;     /* Cards */
---color-alabaster: #e5e5e5;  /* Primary text */
---color-granite: #737373;    /* Secondary text */
---color-lucid: #00f0ff;      /* Accent (cyan) */
+--color-obsidian:    #050505;
+--color-basalt:      #111111;
+--color-alabaster:   #e8e8e8;
+--color-granite:     #737373;
+--color-silver:      #C0C0C0;   /* Crystalline Silver — primary accent */
+--color-silver-dim:  #666666;
 ```
 
 ---
 
-## 🔧 Configuration
+## Live Systems
 
-### **Metadata (app/layout.tsx)**
-
-Update these before deployment:
-
-```tsx
-// Line ~35: Your domain
-url: "https://yourdomain.com"
-
-// Line ~42: OG image URL
-url: "https://yourdomain.com/og.png"
-
-// Line ~51: Twitter handle
-creator: "@yourhandle"
-```
-
-### **Social Links (components/Footer.tsx)**
-
-Update social media URLs:
-
-```tsx
-<a href="https://twitter.com/yourhandle" ...>
-<a href="https://linkedin.com/in/yourprofile" ...>
-<a href="https://github.com/yourusername" ...>
-```
+| System        | URL                                     |
+|---------------|-----------------------------------------|
+| PRISM         | https://prism-mu-one.vercel.app/        |
+| NexOps        | https://nexops-three.vercel.app/        |
+| Ascent Ledger | https://ascent-ledger.vercel.app/       |
 
 ---
 
-## 📊 Performance
+## Pre-Launch Checklist
 
-Target metrics (Lighthouse):
-
-- **Performance**: 90+
-- **Accessibility**: 90+
-- **Best Practices**: 90+
-- **SEO**: 90+
-
-Core Web Vitals:
-- **LCP**: < 2.5s
-- **FID**: < 100ms
-- **CLS**: < 0.1
+- [ ] Cal.com link — replace `#` in Navigation, FinalCTA, msa/page
+- [ ] Domain — `epopteia.io` → update canonical in `layout.tsx`
+- [ ] Email — `hello@epopteia.io`
+- [ ] Favicon — update on logo launch
 
 ---
 
-## 🚢 Deployment
+## Legal
 
-### **Vercel (Recommended)**
-
-```bash
-# Install Vercel CLI
-npm i -g vercel
-
-# Deploy to production
-vercel --prod
-```
-
-### **Environment Variables**
-
-No environment variables required. All configuration is in `layout.tsx`.
+- `/privacy` · `/terms` · `/msa` — Governing law: Nigeria
 
 ---
 
-## 📝 Legal Pages
+## Contact
 
-Three legal pages are included:
-
-- **/privacy**: Privacy Policy
-- **/terms**: Terms of Service
-- **/msa**: Master Services Agreement
-
-**Update jurisdiction** in Terms and MSA before launch (replace `[Your Jurisdiction]`).
+- **Email**: hello@epopteia.io
 
 ---
 
-## 🦅 Brand Identity
+© 2025 Epopteia. All rights reserved.
 
-**Lucid the Eagle**
-
-"I provide clarity where there is blur, fog, and smoke."
-
-### **The Product Trinity**
-
-- **The Prism**: Input (data fracturing)
-- **The Sentry**: Process (autonomous triage)
-- **The Overwatch**: Insight (predictive analytics)
-
-### **Core Principles**
-
-1. Sharp, never round
-2. Stone meets light
-3. Serif speaks vision, Mono speaks system
-4. Vertical flow (scroll journey)
-5. Minimal animation (intentional, not flashy)
-
----
-
-## 📞 Contact
-
-- **Email**: lucidtheeagle@gmail.com
-- **Booking**: [Cal.com Strategy Call](https://cal.com/lucid-theeagle-ebabkz/system-strategy-call)
-
----
-
-## 📄 License
-
-All rights reserved © 2026 Lucid Systems.
-
-Built by Lucid the Eagle.
-
-**Intelligence enforced. Chaos removed.**
+**Supreme Vision. The fog has a solution.**
