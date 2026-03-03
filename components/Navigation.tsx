@@ -1,27 +1,70 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Menu, X } from "lucide-react"
 
 /* ── CONSTANTS ───────────────────────────────────────────────────────────── */
-const NAV_LINKS = [
-  { label: "Systems",    id: "systems"    },
-  { label: "Philosophy", id: "philosophy" },
-  { label: "Work",       id: "work"       },
-] as const
-
 const PREMIUM_EASE: [number, number, number, number] = [0.16, 1, 0.3, 1]
 
-/* ── TYPES ───────────────────────────────────────────────────────────────── */
-interface NavLinkProps {
-  label: string
-  onClick: () => void
-  tabIndex?: number
+/* Section IDs must match the id="" on each section component exactly:
+   Systems.tsx  → id="work"
+   Philosophy   → id="philosophy"
+   WhoThisIsFor → id="filter"                                               */
+const NAV_LINKS = [
+  { label: "Systems",    id: "work"       },
+  { label: "Philosophy", id: "philosophy" },
+  { label: "Work",       id: "filter"     },
+] as const
+
+/* ── ABSTRACT MENU ICON ──────────────────────────────────────────────────── */
+/*    Three lines that morph to an X — fog collapsing to a single point.    */
+/*    Top: full width. Middle: becomes diagonal. Bottom: shorter, offset.   */
+function EpopteiaMenuIcon({ isOpen }: { isOpen: boolean }) {
+  return (
+    <svg
+      width="24"
+      height="16"
+      viewBox="0 0 24 16"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+    >
+      {/* Top line — full, collapses inward when open */}
+      <motion.line
+        x1="0" y1="1" x2="24" y2="1"
+        stroke="currentColor" strokeWidth="1"
+        animate={isOpen
+          ? { x1: 4, y1: 4, x2: 20, y2: 12, opacity: 1 }
+          : { x1: 0, y1: 1, x2: 24, y2:  1, opacity: 1 }
+        }
+        transition={{ duration: 0.35, ease: PREMIUM_EASE }}
+      />
+      {/* Middle line — fades out on open (the two diagonals replace it) */}
+      <motion.line
+        x1="0" y1="8" x2="20" y2="8"
+        stroke="currentColor" strokeWidth="1"
+        animate={isOpen
+          ? { opacity: 0 }
+          : { opacity: 1 }
+        }
+        transition={{ duration: 0.2, ease: "easeOut" }}
+      />
+      {/* Bottom line — shorter + offset, becomes second diagonal when open */}
+      <motion.line
+        x1="6" y1="15" x2="24" y2="15"
+        stroke="currentColor" strokeWidth="1"
+        animate={isOpen
+          ? { x1: 4, y1: 12, x2: 20, y2: 4, opacity: 1 }
+          : { x1: 6, y1: 15, x2: 24, y2: 15, opacity: 1 }
+        }
+        transition={{ duration: 0.35, ease: PREMIUM_EASE }}
+      />
+    </svg>
+  )
 }
 
-/* ── SUB-COMPONENTS ──────────────────────────────────────────────────────── */
-function DesktopNavLink({ label, onClick }: NavLinkProps) {
+/* ── DESKTOP NAV LINK ────────────────────────────────────────────────────── */
+function DesktopNavLink({ label, onClick }: { label: string; onClick: () => void }) {
   return (
     <button
       onClick={onClick}
@@ -35,7 +78,6 @@ function DesktopNavLink({ label, onClick }: NavLinkProps) {
       "
     >
       {label}
-      {/* Underline sweep */}
       <span
         aria-hidden="true"
         className="
@@ -50,31 +92,29 @@ function DesktopNavLink({ label, onClick }: NavLinkProps) {
   )
 }
 
+/* ── NAV CTA BUTTON ──────────────────────────────────────────────────────── */
 function NavCTAButton({ onClick }: { onClick: () => void }) {
   return (
     <button
       onClick={onClick}
-      aria-label="Begin the Ascent — schedule a clarity session"
+      aria-label="Begin the Ascent — book a clarity session"
       className="
         relative overflow-hidden
         font-modern text-[11px] uppercase tracking-[0.15em]
         px-6 py-[10px]
-        text-obsidian bg-silver
-        border border-silver
-        transition-transform duration-200
-        hover:-translate-y-px
-        focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-silver focus-visible:ring-offset-2 focus-visible:ring-offset-obsidian
+        text-obsidian bg-silver border border-silver
+        transition-transform duration-200 hover:-translate-y-px
+        focus-visible:outline-none focus-visible:ring-1
+        focus-visible:ring-silver focus-visible:ring-offset-2
+        focus-visible:ring-offset-obsidian
         group
       "
     >
-      {/* Fill sweep on hover */}
       <span
         aria-hidden="true"
         className="
-          absolute inset-0
-          bg-alabaster
-          -translate-x-full
-          transition-transform duration-300
+          absolute inset-0 bg-alabaster
+          -translate-x-full transition-transform duration-300
           group-hover:translate-x-0
         "
         style={{ transitionTimingFunction: "cubic-bezier(0.16,1,0.3,1)" }}
@@ -86,52 +126,54 @@ function NavCTAButton({ onClick }: { onClick: () => void }) {
 
 /* ── MAIN COMPONENT ──────────────────────────────────────────────────────── */
 export default function Navigation() {
-  const [scrolled,        setScrolled]        = useState(false)
-  const [mobileMenuOpen,  setMobileMenuOpen]  = useState(false)
+  const [scrolled,       setScrolled]       = useState(false)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const rafRef                              = useRef<number>(0)
 
-  /* Scroll state — debounced, passive listener */
+  /* Scroll state — rAF debounced, passive */
   useEffect(() => {
-    let raf: number
     const handleScroll = () => {
-      cancelAnimationFrame(raf)
-      raf = requestAnimationFrame(() => {
+      cancelAnimationFrame(rafRef.current)
+      rafRef.current = requestAnimationFrame(() => {
         setScrolled(window.scrollY > 50)
       })
     }
-
     window.addEventListener("scroll", handleScroll, { passive: true })
     return () => {
-      cancelAnimationFrame(raf)
+      cancelAnimationFrame(rafRef.current)
       window.removeEventListener("scroll", handleScroll)
     }
   }, [])
 
-  /* Body scroll lock when mobile menu is open */
+  /* Body scroll lock when menu open */
   useEffect(() => {
     document.body.style.overflow = mobileMenuOpen ? "hidden" : ""
     return () => { document.body.style.overflow = "" }
   }, [mobileMenuOpen])
 
-  /* Keyboard: close mobile menu on Escape */
+  /* Escape key closes menu */
   useEffect(() => {
     if (!mobileMenuOpen) return
-    const handleKey = (e: KeyboardEvent) => {
+    const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") setMobileMenuOpen(false)
     }
-    document.addEventListener("keydown", handleKey)
-    return () => document.removeEventListener("keydown", handleKey)
+    document.addEventListener("keydown", onKey)
+    return () => document.removeEventListener("keydown", onKey)
   }, [mobileMenuOpen])
 
+  const closeMenu = () => setMobileMenuOpen(false)
+
   const scrollToSection = (id: string) => {
-    const el = document.getElementById(id)
-    if (el) {
-      el.scrollIntoView({ behavior: "smooth" })
-      setMobileMenuOpen(false)
-    }
+    closeMenu()
+    /* Wait for menu exit animation before scrolling */
+    setTimeout(() => {
+      const el = document.getElementById(id)
+      if (el) el.scrollIntoView({ behavior: "smooth" })
+    }, 200)
   }
 
-  const openCalLink = () => {
-    // TODO: replace # with Epopteia Cal.com link when available
+  const openBooking = () => {
+    /* TODO: replace # with Epopteia Cal.com booking link */
     window.open("#", "_blank", "noopener,noreferrer")
   }
 
@@ -149,7 +191,7 @@ export default function Navigation() {
           fixed top-0 left-0 right-0 z-50
           transition-[border-color,background] duration-300
           ${scrolled
-            ? "border-b border-[rgba(255,255,255,0.07)]"
+            ? "border-b border-border"
             : "border-b border-transparent"
           }
         `}
@@ -159,22 +201,21 @@ export default function Navigation() {
           aria-hidden="true"
           className="absolute inset-0 transition-all duration-300"
           style={{
-            backgroundColor: scrolled ? "rgba(5,5,5,0.85)" : "transparent",
-            backdropFilter:  scrolled ? "blur(20px)" : "none",
-            WebkitBackdropFilter: scrolled ? "blur(20px)" : "none",
+            backgroundColor:      scrolled ? "rgba(5,5,5,0.85)" : "transparent",
+            backdropFilter:       scrolled ? "blur(20px)"        : "none",
+            WebkitBackdropFilter: scrolled ? "blur(20px)"        : "none",
           }}
         />
 
         <div className="relative max-w-[1280px] mx-auto px-6 md:px-10 h-[72px] flex items-center justify-between">
 
-          {/* ── BRAND ──────────────────────────────────────────────────── */}
+          {/* Brand */}
           <button
             onClick={() => scrollToSection("hero")}
             aria-label="Epopteia — return to top"
             className="
-              font-ancient text-lg md:text-xl
-              font-black tracking-[0.2em] uppercase
-              text-alabaster
+              font-ancient text-lg md:text-xl font-black
+              tracking-[0.2em] uppercase text-alabaster
               transition-opacity duration-200 hover:opacity-80
               focus-visible:outline-none focus-visible:ring-1
               focus-visible:ring-silver focus-visible:ring-offset-2
@@ -184,7 +225,7 @@ export default function Navigation() {
             EPOPTEIA
           </button>
 
-          {/* ── DESKTOP LINKS ──────────────────────────────────────────── */}
+          {/* Desktop links */}
           <div className="hidden md:flex items-center gap-8">
             {NAV_LINKS.map((link) => (
               <DesktopNavLink
@@ -193,19 +234,17 @@ export default function Navigation() {
                 onClick={() => scrollToSection(link.id)}
               />
             ))}
-
-            <NavCTAButton onClick={openCalLink} />
+            <NavCTAButton onClick={openBooking} />
           </div>
 
-          {/* ── HAMBURGER ──────────────────────────────────────────────── */}
+          {/* Abstract Epopteia menu icon */}
           <button
             onClick={() => setMobileMenuOpen((prev) => !prev)}
-            aria-label={mobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
+            aria-label={mobileMenuOpen ? "Close navigation" : "Open navigation"}
             aria-expanded={mobileMenuOpen}
             aria-controls="mobile-menu"
             className="
-              md:hidden
-              relative z-50
+              md:hidden relative z-50
               p-2 -mr-2
               text-alabaster hover:text-silver
               transition-colors duration-200
@@ -214,7 +253,7 @@ export default function Navigation() {
               touch-manipulation
             "
           >
-            {mobileMenuOpen ? <X size={22} strokeWidth={1.5} /> : <Menu size={22} strokeWidth={1.5} />}
+            <EpopteiaMenuIcon isOpen={mobileMenuOpen} />
           </button>
         </div>
       </motion.nav>
@@ -232,21 +271,21 @@ export default function Navigation() {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.25, ease: "easeOut" }}
             className="fixed inset-0 z-40 md:hidden"
-            onClick={() => setMobileMenuOpen(false)}
           >
-            {/* Backdrop */}
+            {/* Backdrop — handles both click and touch close */}
             <div
               aria-hidden="true"
-              className="absolute inset-0 bg-obsidian/95"
+              className="absolute inset-0 bg-obsidian/95 cursor-pointer"
               style={{ backdropFilter: "blur(24px)", WebkitBackdropFilter: "blur(24px)" }}
+              onClick={closeMenu}
+              onTouchEnd={(e) => { e.preventDefault(); closeMenu() }}
             />
 
-            {/* Menu content */}
+            {/* Menu content — stopPropagation prevents backdrop close on link tap */}
             <div
               className="relative h-full flex flex-col items-center justify-center gap-10 px-6 z-10"
               onClick={(e) => e.stopPropagation()}
             >
-
               {/* Nav links */}
               {NAV_LINKS.map((link, i) => (
                 <motion.button
@@ -260,7 +299,8 @@ export default function Navigation() {
                     font-ancient text-2xl uppercase tracking-[0.15em]
                     text-alabaster hover:text-silver
                     transition-colors duration-200
-                    focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-silver
+                    focus-visible:outline-none focus-visible:ring-1
+                    focus-visible:ring-silver
                     touch-manipulation
                   "
                 >
@@ -270,23 +310,24 @@ export default function Navigation() {
 
               {/* Mobile CTA */}
               <motion.button
-                onClick={() => { openCalLink(); setMobileMenuOpen(false) }}
+                onClick={openBooking}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{
-                  delay: NAV_LINKS.length * 0.08 + 0.1,
+                  delay:    NAV_LINKS.length * 0.08 + 0.1,
                   duration: 0.5,
-                  ease: PREMIUM_EASE,
+                  ease:     PREMIUM_EASE,
                 }}
                 style={{ willChange: "opacity, transform" }}
-                aria-label="Begin the Ascent — schedule a clarity session"
+                aria-label="Begin the Ascent — book a clarity session"
                 className="
                   font-modern text-sm uppercase tracking-[0.15em]
                   border border-silver text-silver
                   px-8 py-4
                   hover:bg-silver hover:text-obsidian
                   transition-colors duration-300
-                  focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-silver
+                  focus-visible:outline-none focus-visible:ring-1
+                  focus-visible:ring-silver
                   touch-manipulation
                 "
               >
@@ -302,7 +343,7 @@ export default function Navigation() {
                 className="
                   absolute bottom-10
                   font-modern text-[10px] uppercase tracking-[0.2em]
-                  text-granite
+                  text-silver-dim
                 "
               >
                 Tap anywhere to close
