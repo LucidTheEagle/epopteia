@@ -1,6 +1,6 @@
 import Hero from "@/components/Hero";
 import Navigation from "@/components/Navigation";
-import { Creed } from "@/components/Creed";
+import Identity from "@/components/Identity";
 import TheFog from "@/components/TheFog";
 import Systems from "@/components/Systems";
 import Pricing from "@/components/Pricing";
@@ -24,7 +24,7 @@ export default function Home() {
       <Hero />
       
       {/* CREED - First below-the-fold section */}
-      <Creed />
+      <Identity />
       
       {/* PROBLEM - Lazy loaded */}
       <LazySection rootMargin="200px">
