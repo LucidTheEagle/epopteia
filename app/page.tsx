@@ -1,7 +1,7 @@
 import Hero from "@/components/Hero";
 import Navigation from "@/components/Navigation";
 import { Creed } from "@/components/Creed";
-import Problem from "@/components/Problem";
+import TheFog from "@/components/TheFog";
 import Systems from "@/components/Systems";
 import Pricing from "@/components/Pricing";
 import HowItWorks from "@/components/HowItWorks";
@@ -28,7 +28,7 @@ export default function Home() {
       
       {/* PROBLEM - Lazy loaded */}
       <LazySection rootMargin="200px">
-        <Problem />
+        <TheFog />
       </LazySection>
       
       {/* SYSTEMS - Lazy loaded */}
