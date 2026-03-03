@@ -1,4 +1,4 @@
-import React from "react";
+import React from "react"
 
 export default function StructuredData() {
   const structuredData = {
@@ -6,46 +6,46 @@ export default function StructuredData() {
     "@graph": [
       {
         "@type": "Organization",
-        "@id": "https://lucidsystems.vercel.app/#organization",
-        "name": "Lucid Systems",
-        "url": "https://lucidsystems.vercel.app",
+        "@id": "https://epopteia.io/#organization",
+        "name": "Epopteia",
+        "url": "https://epopteia.io",
         "logo": {
           "@type": "ImageObject",
-          "url": "https://lucidsystems.vercel.app/apple-touch-icon.png",
+          "url": "https://epopteia.io/apple-touch-icon.png",
           "width": 180,
           "height": 180
         },
         "sameAs": [
-          "https://twitter.com/lucidtheeagle"
+          "https://twitter.com/epopteia"
         ],
-        "description": "AI Systems Architect for High-Volume Operations. We provide clarity where there is blur, fog, and smoke."
+        "description": "Clarity architecture through AI. We strip away the fog of complexity and architect clarity for founders, operators, and high-performers."
       },
       {
         "@type": "WebSite",
-        "@id": "https://lucidsystems.vercel.app/#website",
-        "url": "https://lucidsystems.vercel.app",
-        "name": "Lucid Systems",
+        "@id": "https://epopteia.io/#website",
+        "url": "https://epopteia.io",
+        "name": "Epopteia",
         "publisher": {
-          "@id": "https://lucidsystems.vercel.app/#organization"
+          "@id": "https://epopteia.io/#organization"
         }
       },
       {
         "@type": "Service",
-        "name": "AI Systems Architecture",
+        "name": "Clarity Architecture",
         "provider": {
-          "@id": "https://lucidsystems.vercel.app/#organization"
+          "@id": "https://epopteia.io/#organization"
         },
-        "description": "Deployment of Prism, Sentry, and Overwatch systems to automate high-volume business operations.",
+        "description": "Deployment of PRISM, NexOps, and Ascent Ledger systems — document intelligence, operations command, and human performance diagnostics.",
         "areaServed": "Global",
-        "serviceType": "Operational Automation"
+        "serviceType": "AI Systems Architecture"
       }
     ]
-  };
+  }
 
   return (
     <script
       type="application/ld+json"
       dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
     />
-  );
+  )
 }

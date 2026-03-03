@@ -1,61 +1,49 @@
-"use client";
+"use client"
 
-import React, { useState, useEffect, useRef } from "react";
-import { motion } from "framer-motion";
+import React, { useState, useEffect, useRef } from "react"
 
 interface LazySectionProps {
-  children: React.ReactNode;
-  className?: string;
-  threshold?: number;
-  rootMargin?: string;
+  children:    React.ReactNode
+  className?:  string
+  threshold?:  number
+  rootMargin?: string
 }
 
-export default function LazySection({ 
-  children, 
-  className = "", 
-  threshold = 0.1,
-  rootMargin = "200px" 
+export default function LazySection({
+  children,
+  className  = "",
+  threshold  = 0.1,
+  rootMargin = "200px",
 }: LazySectionProps) {
-  const [isVisible, setIsVisible] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
+  const [isVisible, setIsVisible] = useState(false)
+  const ref                       = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
+    const el = ref.current
+    if (!el) return
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          setIsVisible(true);
-          if (ref.current) observer.unobserve(ref.current);
+          setIsVisible(true)
+          observer.unobserve(el)
         }
       },
-      {
-        root: null,
-        rootMargin,
-        threshold,
-      }
-    );
+      { root: null, rootMargin, threshold }
+    )
 
-    if (ref.current) {
-      observer.observe(ref.current);
-    }
-
-    return () => {
-      if (ref.current) observer.unobserve(ref.current);
-    };
-  }, [rootMargin, threshold]);
+    observer.observe(el)
+    return () => observer.unobserve(el)
+  }, [rootMargin, threshold])
 
   return (
-    <div ref={ref} className={`min-h-[10vh] ${className}`}>
-      {isVisible ? (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5 }}
-        >
-          {children}
-        </motion.div>
-      ) : (
-        <div className="h-24 w-full bg-transparent" aria-hidden="true" />
-      )}
+    /* No min-h — each section owns its own height.
+       No motion wrapper — each section owns its own scroll animations. */
+    <div ref={ref} className={className}>
+      {isVisible
+        ? children
+        : <div aria-hidden="true" className="h-24 w-full" />
+      }
     </div>
-  );
+  )
 }

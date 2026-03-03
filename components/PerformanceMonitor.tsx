@@ -1,53 +1,69 @@
-"use client";
+"use client"
 
-import { useEffect, useState } from "react";
+import { useEffect, useState } from "react"
+
+/* Chrome-only memory API — not in the standard Performance type */
+interface PerformanceWithMemory extends Performance {
+  memory?: {
+    usedJSHeapSize:  number
+    totalJSHeapSize: number
+    jsHeapSizeLimit: number
+  }
+}
 
 export default function PerformanceMonitor() {
-  const [metrics, setMetrics] = useState({ fps: 0, memory: 0 });
+  const [metrics, setMetrics] = useState({ fps: 0, memory: 0 })
 
   useEffect(() => {
-    // Only run in development
-    if (process.env.NODE_ENV !== "development") return;
+    if (process.env.NODE_ENV !== "development") return
 
-    let frameCount = 0;
-    let lastTime = performance.now();
-    let animationFrameId: number;
+    let frameCount = 0
+    let lastTime   = performance.now()
+    let rafId:     number
 
-    const updateMetrics = () => {
-      const now = performance.now();
-      frameCount++;
+    const update = () => {
+      const now = performance.now()
+      frameCount++
 
       if (now - lastTime >= 1000) {
-        // @ts-expect-error - memory API is not standard but works in Chrome
-        const memory = performance.memory ? Math.round(performance.memory.usedJSHeapSize / 1024 / 1024) : 0;
-        
+        const perf   = performance as PerformanceWithMemory
+        const memory = perf.memory
+          ? Math.round(perf.memory.usedJSHeapSize / 1024 / 1024)
+          : 0
+
         setMetrics({
           fps: Math.round((frameCount * 1000) / (now - lastTime)),
           memory,
-        });
+        })
 
-        frameCount = 0;
-        lastTime = now;
+        frameCount = 0
+        lastTime   = now
       }
 
-      animationFrameId = requestAnimationFrame(updateMetrics);
-    };
+      rafId = requestAnimationFrame(update)
+    }
 
-    animationFrameId = requestAnimationFrame(updateMetrics);
+    rafId = requestAnimationFrame(update)
+    return () => cancelAnimationFrame(rafId)
+  }, [])
 
-    return () => cancelAnimationFrame(animationFrameId);
-  }, []);
-
-  if (process.env.NODE_ENV !== "development") return null;
+  if (process.env.NODE_ENV !== "development") return null
 
   return (
-    <div className="fixed bottom-4 left-4 z-9999 bg-black/80 text-lucid border border-lucid/20 p-2 font-mono text-xs rounded pointer-events-none">
-      <div className={metrics.fps < 30 ? "text-red-500 font-bold" : "text-lucid"}>
+    <div className="
+      fixed bottom-4 left-4 z-9999
+      bg-obsidian/90
+      border border-[rgba(192,192,192,0.15)]
+      p-2
+      font-modern text-xs
+      pointer-events-none
+    ">
+      <div className={metrics.fps < 30 ? "text-red-500 font-bold" : "text-silver"}>
         FPS: {metrics.fps}
       </div>
       <div className="text-granite">
         RAM: {metrics.memory}MB
       </div>
     </div>
-  );
+  )
 }
