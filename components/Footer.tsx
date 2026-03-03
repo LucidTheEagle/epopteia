@@ -1,171 +1,232 @@
-"use client";
-import React, { useMemo } from "react";
-import { Github, Twitter, Linkedin, Mail } from "lucide-react";
+"use client"
 
-export default function Footer() {
-  // Compute year once with useMemo
-  const currentYear = useMemo(() => new Date().getFullYear(), []);
+import { motion, useInView } from "framer-motion"
+import { useRef } from "react"
 
-  const socialLinks = [
-    { 
-      icon: Twitter, 
-      href: "https://twitter.com/lucidtheeagle", 
-      label: "Twitter" 
-    },
-    { 
-      icon: Linkedin, 
-      href: "https://www.linkedin.com/in/victor-okefie-9a333b26b/", 
-      label: "LinkedIn" 
-    },
-    { 
-      icon: Github, 
-      href: "https://github.com/lucidtheeagle", 
-      label: "GitHub" 
-    }
-  ];
+/* ── CONSTANTS ───────────────────────────────────────────────────────────── */
+const PREMIUM_EASE: [number, number, number, number] = [0.16, 1, 0.3, 1]
 
-  const sitemapLinks = [
-    { href: "#creed", label: "The Creed" },
-    { href: "#problem", label: "The Problem" },
-    { href: "#systems", label: "Systems" },
-    { href: "#how-it-works", label: "Execution" },
-    { href: "#pricing", label: "Deployment" },
-    { href: "#proof", label: "Proof" },
-  ];
+const SYSTEM_LINKS = [
+  { label: "PRISM",         href: "#systems" },
+  { label: "NexOps",        href: "#systems" },
+  { label: "Ascent Ledger", href: "#systems" },
+] as const
 
-  const legalLinks = [
-    { href: "/privacy", label: "Privacy Policy" },
-    { href: "/terms", label: "Terms of Service" },
-    { href: "/msa", label: "Master Services Agreement" },
-  ];
+const LEGAL_LINKS = [
+  { label: "Privacy Policy",   href: "/privacy" },
+  { label: "Terms of Service", href: "/terms"   },
+  { label: "MSA",              href: "/msa"     },
+] as const
+
+/* ── FOOTER LINK ─────────────────────────────────────────────────────────── */
+function FooterLink({
+  label,
+  href,
+}: {
+  label: string
+  href:  string
+}) {
+  const isExternal = href.startsWith("http")
 
   return (
-    <footer 
-      className="w-full bg-basalt border-t border-white/5 pt-16 pb-8"
-      role="contentinfo"
+    <a
+      href={href}
+      {...(isExternal
+        ? { target: "_blank", rel: "noopener noreferrer" }
+        : {})}
+      className="
+        group relative inline-block
+        font-modern text-[12px] leading-[1.6]
+        text-granite
+        hover:text-alabaster
+        transition-colors duration-200
+        focus-visible:outline-none focus-visible:text-silver
+      "
     >
-      <div className="max-w-6xl mx-auto px-6">
-        
-        {/* TOP ROW: GRID */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 md:gap-8 mb-16">
-          
-          {/* COL 1: BRAND */}
-          <div className="space-y-4">
-            <h3 className="text-ancient text-xl font-bold text-alabaster tracking-[0.15em] uppercase">
-              Lucid <span className="bg-gradient-to-r from-emerald-400 to-lucid bg-clip-text text-transparent">Systems</span>
-            </h3>
-            <p className="text-modern text-granite text-sm leading-relaxed max-w-xs">
-              I provide clarity where there is blur, fog, and smoke. Every system I build is proof of clarity.
+      {label}
+      {/* Underline sweep */}
+      <span
+        aria-hidden="true"
+        className="
+          absolute -bottom-px left-0
+          h-px w-0 bg-silver-dim
+          transition-[width] duration-300
+          group-hover:w-full
+        "
+        style={{ transitionTimingFunction: "cubic-bezier(0.16,1,0.3,1)" }}
+      />
+    </a>
+  )
+}
+
+/* ── MAIN COMPONENT ──────────────────────────────────────────────────────── */
+export default function Footer() {
+  const footerRef = useRef<HTMLElement>(null)
+  const inView    = useInView(footerRef, { once: true, margin: "-40px" })
+
+  const currentYear = new Date().getFullYear()
+
+  return (
+    <footer
+      ref={footerRef}
+      role="contentinfo"
+      aria-label="Epopteia site footer"
+      className="
+        relative w-full
+        border-t border-[rgba(255,255,255,0.07)]
+        px-6
+      "
+    >
+      <div className="max-w-[1280px] mx-auto">
+
+        {/* ── MAIN FOOTER GRID ──────────────────────────────────────────── */}
+        <div
+          className="
+            grid
+            grid-cols-1
+            md:grid-cols-[2fr_1fr_1fr]
+            gap-12 md:gap-8
+            py-16 md:py-20
+          "
+        >
+
+          {/* ── COL 1 — Brand + Creed ─────────────────────────────────── */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.7, ease: PREMIUM_EASE }}
+            style={{ willChange: "opacity, transform" }}
+            className="flex flex-col gap-5"
+          >
+            {/* Brand name */}
+            <span className="
+              font-ancient font-black
+              text-[22px] tracking-[0.18em] uppercase
+              text-alabaster
+            ">
+              EPOPTEIA
+            </span>
+
+            {/* Creed excerpt */}
+            <p className="
+              font-modern text-[12px] leading-[1.8]
+              text-granite
+              max-w-[300px]
+            ">
+              Clarity where there is blur, fog, and smoke. The end of
+              confusion. The beginning of altitude.
             </p>
-            
-            {/* STATUS INDICATOR */}
-            <div className="flex items-center gap-2 mt-4">
-              <span className="relative flex h-2 w-2" aria-hidden="true">
-                <span 
-                  className="animate-ping absolute inline-flex h-full w-full bg-emerald-400 opacity-75"
-                  style={{ willChange: 'opacity, transform' }}
-                />
-                <span className="relative inline-flex h-2 w-2 bg-emerald-500 rounded-full" />
-              </span>
-              <span className="text-[10px] font-mono text-emerald-500 tracking-widest uppercase">
-                Systems Operational
-              </span>
-            </div>
-          </div>
 
-          {/* COL 2: SITEMAP */}
-          <nav aria-label="Site navigation">
-            <h4 className="text-alabaster font-mono text-xs tracking-widest uppercase mb-6">
-              Coordinates
-            </h4>
-            <ul className="space-y-3 text-sm text-granite font-mono">
-              {sitemapLinks.map(({ href, label }) => (
-                <li key={href}>
-                  <a 
-                    href={href} 
-                    className="hover:text-lucid transition-colors duration-300"
-                  >
-                    {label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </nav>
+            {/* Pronunciation */}
+            <span className="
+              font-modern text-[10px] uppercase tracking-[0.2em]
+              text-silver-dim
+            ">
+              eh-pop-TEY-ah
+            </span>
 
-          {/* COL 3: LEGAL */}
-          <nav aria-label="Legal">
-            <h4 className="text-alabaster font-mono text-xs tracking-widest uppercase mb-6">
-              Protocols
-            </h4>
-            <ul className="space-y-3 text-sm text-granite font-mono">
-              {legalLinks.map(({ href, label }) => (
-                <li key={href}>
-                  <a 
-                    href={href} 
-                    className="hover:text-lucid transition-colors duration-300"
-                  >
-                    {label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </nav>
+            {/* Divider */}
+            <div
+              aria-hidden="true"
+              className="w-8 h-px bg-[rgba(255,255,255,0.07)] mt-2"
+            />
 
-          {/* COL 4: CONNECT */}
-          <div>
-            <h4 className="text-alabaster font-mono text-xs tracking-widest uppercase mb-6">
-              Transmissions
-            </h4>
-            <div className="flex gap-4 mb-6" role="list">
-              {socialLinks.map(({ icon: Icon, href, label }) => (
-                <a
-                  key={label}
-                  href={href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-10 h-10 bg-white/5 border border-white/10 flex items-center justify-center text-granite hover:text-lucid hover:bg-white/10 hover:border-lucid/50 transition-all duration-300 touch-manipulation"
-                  aria-label={`Visit our ${label}`}
-                  role="listitem"
-                >
-                  <Icon className="w-5 h-5" />
-                </a>
-              ))}
-            </div>
-            
-            {/* EMAIL */}
-            <a 
-              href="mailto:lucidtheeagle@gmail.com"
-              className="flex items-center gap-2 text-xs text-granite hover:text-lucid transition-colors duration-300 font-mono"
-              aria-label="Email us"
-            >
-              <Mail className="w-4 h-4" />
-              <span className="break-all">lucidtheeagle@gmail.com</span>
-            </a>
-          </div>
+            {/* Tagline */}
+            <span className="
+              font-ancient text-[11px] uppercase tracking-[0.25em]
+              text-silver-dim italic
+            ">
+              Supreme Vision.
+            </span>
+          </motion.div>
+
+          {/* ── COL 2 — Systems ───────────────────────────────────────── */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ delay: 0.1, duration: 0.7, ease: PREMIUM_EASE }}
+            style={{ willChange: "opacity, transform" }}
+            className="flex flex-col gap-4"
+          >
+            <span className="
+              font-modern text-[9px] uppercase tracking-[0.25em]
+              text-silver
+              mb-2
+            ">
+              Systems
+            </span>
+
+            <nav aria-label="Epopteia systems navigation">
+              <ul className="flex flex-col gap-3" role="list">
+                {SYSTEM_LINKS.map((link) => (
+                  <li key={link.label}>
+                    <FooterLink label={link.label} href={link.href} />
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          </motion.div>
+
+          {/* ── COL 3 — Legal ─────────────────────────────────────────── */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ delay: 0.2, duration: 0.7, ease: PREMIUM_EASE }}
+            style={{ willChange: "opacity, transform" }}
+            className="flex flex-col gap-4"
+          >
+            <span className="
+              font-modern text-[9px] uppercase tracking-[0.25em]
+              text-silver
+              mb-2
+            ">
+              Legal
+            </span>
+
+            <nav aria-label="Legal pages navigation">
+              <ul className="flex flex-col gap-3" role="list">
+                {LEGAL_LINKS.map((link) => (
+                  <li key={link.label}>
+                    <FooterLink label={link.label} href={link.href} />
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          </motion.div>
 
         </div>
 
-        {/* DIVIDER */}
-        <div 
-          className="h-px bg-gradient-to-r from-transparent via-white/10 to-transparent mb-8"
-          role="separator"
-          aria-hidden="true"
-        />
+        {/* ── BOTTOM BAR ────────────────────────────────────────────────── */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={inView ? { opacity: 1 } : {}}
+          transition={{ delay: 0.35, duration: 0.6, ease: "easeOut" }}
+          className="
+            flex flex-col md:flex-row
+            items-start md:items-center
+            justify-between
+            gap-3
+            py-6
+            border-t border-[rgba(255,255,255,0.07)]
+          "
+        >
+          <span className="
+            font-modern text-[10px] uppercase tracking-[0.15em]
+            text-silver-dim
+          ">
+            © {currentYear} Epopteia. All rights reserved.
+          </span>
 
-        {/* BOTTOM ROW: COPYRIGHT */}
-        <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-center md:text-left">
-          <p className="text-granite text-xs font-mono">
-            © {currentYear} LUCID SYSTEMS. All rights reserved.
-          </p>
-          <p className="text-granite text-xs font-mono opacity-50 flex flex-wrap items-center justify-center gap-2">
-            <span>Built by</span>
-            <span className="text-lucid">Lucid the Eagle</span>
-            <span aria-hidden="true">•</span>
-            <span>Intelligence enforced. Chaos removed.</span>
-          </p>
-        </div>
+          <span className="
+            font-ancient text-[10px] uppercase tracking-[0.25em]
+            text-silver
+            italic
+          ">
+            Supreme Vision.
+          </span>
+        </motion.div>
 
       </div>
     </footer>
-  );
+  )
 }

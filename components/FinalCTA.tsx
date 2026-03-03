@@ -1,171 +1,219 @@
-"use client";
-import React, { useState, useEffect } from "react";
-import { motion } from "framer-motion";
-import { ArrowRight, Terminal } from "lucide-react";
+"use client"
 
-const premiumEase: [number, number, number, number] = [0.25, 0.1, 0.25, 1.0];
+import { useRef } from "react"
+import { motion, useInView } from "framer-motion"
 
+/* ── CONSTANTS ───────────────────────────────────────────────────────────── */
+const PREMIUM_EASE: [number, number, number, number] = [0.16, 1, 0.3, 1]
+
+const STAGGER_ITEMS = [
+  { id: "eyebrow",  delay: 0    },
+  { id: "heading",  delay: 0.15 },
+  { id: "subline",  delay: 0.30 },
+  { id: "cta",      delay: 0.45 },
+  { id: "tagline",  delay: 0.60 },
+] as const
+
+/* ── GEOMETRY RINGS — static, no rotation (distinct from Hero) ───────────── */
+function StaticRings() {
+  return (
+    <div aria-hidden="true" className="absolute inset-0 pointer-events-none overflow-hidden">
+      <div
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+        style={{ width: "min(700px,120vw)", height: "min(700px,120vw)" }}
+      >
+        <svg
+          viewBox="0 0 700 700"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          className="w-full h-full opacity-[0.03]"
+        >
+          <circle cx="350" cy="350" r="348" stroke="#C0C0C0" strokeWidth="0.5" />
+          <circle cx="350" cy="350" r="240" stroke="#C0C0C0" strokeWidth="0.5" />
+          <circle cx="350" cy="350" r="140" stroke="#C0C0C0" strokeWidth="0.5" />
+          <line x1="350" y1="2"   x2="350" y2="698" stroke="#C0C0C0" strokeWidth="0.3" />
+          <line x1="2"   y1="350" x2="698" y2="350" stroke="#C0C0C0" strokeWidth="0.3" />
+          <line x1="96"  y1="96"  x2="604" y2="604" stroke="#C0C0C0" strokeWidth="0.3" />
+          <line x1="604" y1="96"  x2="96"  y2="604" stroke="#C0C0C0" strokeWidth="0.3" />
+          <polygon
+            points="350,2 698,176 698,524 350,698 2,524 2,176"
+            stroke="#C0C0C0" strokeWidth="0.3" fill="none"
+          />
+        </svg>
+      </div>
+      {/* Radial silver glow — center */}
+      <div
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none"
+        style={{
+          width:      "500px",
+          height:     "500px",
+          background: "radial-gradient(circle, rgba(192,192,192,0.05) 0%, transparent 70%)",
+        }}
+      />
+    </div>
+  )
+}
+
+/* ── MAIN COMPONENT ──────────────────────────────────────────────────────── */
 export default function FinalCTA() {
-  const [isMobile, setIsMobile] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null)
+  const contentRef = useRef<HTMLDivElement>(null)
 
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
-    checkMobile();
-    
-    let timeoutId: NodeJS.Timeout;
-    const handleResize = () => {
-      clearTimeout(timeoutId);
-      timeoutId = setTimeout(checkMobile, 150);
-    };
-    
-    window.addEventListener("resize", handleResize, { passive: true });
-    return () => {
-      clearTimeout(timeoutId);
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
+  const inView = useInView(contentRef, { once: true, margin: "-80px" })
+
+  const openCalLink = () => {
+    // TODO: replace # with Epopteia Cal.com link when available
+    window.open("#", "_blank", "noopener,noreferrer")
+  }
 
   return (
-    <section 
-      className="relative w-full py-32 md:py-48 bg-obsidian overflow-hidden flex flex-col items-center justify-center border-t border-white/5"
+    <section
+      id="cta"
+      ref={sectionRef}
       aria-labelledby="cta-heading"
+      className="
+        relative w-full
+        py-40 md:py-56
+        px-6
+        border-t border-[rgba(255,255,255,0.07)]
+        overflow-hidden
+      "
     >
-      
-      {/* Background Ambience */}
-      <div 
-        className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,240,255,0.05)_0%,rgba(0,0,0,0)_50%)]"
-        style={{ transform: 'translateZ(0)' }}
-        aria-hidden="true"
-      />
-      <div 
-        className="absolute inset-0 bg-gradient-to-b from-transparent to-black/80"
-        style={{ transform: 'translateZ(0)' }}
-        aria-hidden="true"
-      />
+      {/* Static geometry rings — distinct from Hero's rotating rings */}
+      <StaticRings />
 
-      {/* SCANLINES - Disabled on mobile */}
-      {!isMobile && (
-        <div 
-          aria-hidden="true"
-          className="absolute inset-0 pointer-events-none opacity-[0.03]"
-          style={{
-            backgroundImage: `repeating-linear-gradient(
-              0deg,
-              transparent,
-              transparent 2px,
-              rgba(255,255,255,0.05) 2px,
-              rgba(255,255,255,0.05) 4px
-            )`,
-            transform: 'translateZ(0)',
-          }}
-        />
-      )}
-
-      <div className="relative z-10 max-w-4xl mx-auto px-6 text-center">
-        
-        {/* ICON - Breathing glow disabled on mobile */}
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.8 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.6, ease: premiumEase }}
-          style={{ willChange: 'opacity, transform' }}
-          className="mx-auto mb-8"
+      <div className="max-w-[1280px] mx-auto relative z-10">
+        <div
+          ref={contentRef}
+          className="flex flex-col items-center text-center gap-6"
         >
+
+          {/* Eyebrow */}
           <motion.div
-            className="w-16 h-16 bg-basalt border border-lucid flex items-center justify-center mx-auto"
-            animate={!isMobile ? {
-              boxShadow: [
-                "0 0 15px rgba(0,240,255,0.2)",
-                "0 0 30px rgba(0,240,255,0.4)",
-                "0 0 15px rgba(0,240,255,0.2)"
-              ]
-            } : {}}
-            transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
-            style={{ willChange: !isMobile ? 'box-shadow' : 'auto' }}
+            initial={{ opacity: 0, y: 12 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{
+              delay:    STAGGER_ITEMS[0].delay,
+              duration: 0.7,
+              ease:     PREMIUM_EASE,
+            }}
+            style={{ willChange: "opacity, transform" }}
             aria-hidden="true"
+            className="section-label"
           >
-            <Terminal className="w-8 h-8 text-lucid" />
+            End of Fog
           </motion.div>
-        </motion.div>
 
-        {/* HEADLINE */}
-        <motion.h2 
-          id="cta-heading"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ delay: 0.2, duration: 0.8, ease: premiumEase }}
-          style={{ willChange: 'opacity, transform' }}
-          className="text-ancient text-4xl md:text-6xl lg:text-7xl font-bold uppercase tracking-[0.15em] text-alabaster mb-6"
-        >
-          Ready to <span className="text-lucid">Enforce Order</span>?
-        </motion.h2>
-
-        {/* SUBHEADLINE */}
-        <motion.p 
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ delay: 0.3, duration: 0.8, ease: premiumEase }}
-          style={{ willChange: 'opacity, transform' }}
-          className="text-modern text-granite text-base md:text-lg max-w-2xl mx-auto mb-12 leading-relaxed"
-        >
-          I don&apos;t build features. I build systems that remove chaos from high-volume operations. 
-          <span className="text-alabaster block mt-2">If your team is drowning in manual work, we need to talk.</span>
-        </motion.p>
-
-        {/* BUTTONS */}
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ delay: 0.4, duration: 0.8, ease: premiumEase }}
-          style={{ willChange: 'opacity, transform' }}
-          className="flex flex-col md:flex-row items-center justify-center gap-6"
-        >
-          {/* PRIMARY CTA */}
-          <a 
-            href="https://cal.com/lucid-theeagle-ebabkz/system-strategy-call"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group relative px-8 py-4 bg-lucid text-obsidian font-bold text-lg tracking-wide hover:bg-white transition-all duration-300 flex items-center gap-3 border border-lucid hover:border-white touch-manipulation"
-            aria-label="Schedule strategy call"
+          {/* Heading */}
+          <motion.h2
+            id="cta-heading"
+            initial={{ opacity: 0, y: 16 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{
+              delay:    STAGGER_ITEMS[1].delay,
+              duration: 0.8,
+              ease:     PREMIUM_EASE,
+            }}
+            style={{ willChange: "opacity, transform" }}
+            className="
+              font-ancient font-black
+              text-[clamp(36px,6vw,80px)]
+              tracking-[0.06em] leading-[1.1]
+              text-alabaster
+              max-w-[700px]
+            "
           >
-            <span className="uppercase tracking-widest">Initiate Deployment</span>
-            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-            
-            {/* EXPANDING BORDER EFFECT - Desktop only */}
-            <div 
-              className="absolute inset-0 border border-white/20 scale-105 opacity-0 group-hover:opacity-100 group-hover:scale-110 transition-all duration-500 pointer-events-none hidden md:block"
-              aria-hidden="true"
-            />
-          </a>
+            The fog has a solution.
+          </motion.h2>
 
-          {/* SECONDARY CTA */}
-          <a 
-            href="#systems"
-            className="text-granite hover:text-alabaster font-mono text-sm tracking-widest uppercase border-b border-transparent hover:border-lucid transition-all duration-300 pb-1"
+          {/* Subline */}
+          <motion.p
+            initial={{ opacity: 0, y: 14 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{
+              delay:    STAGGER_ITEMS[2].delay,
+              duration: 0.7,
+              ease:     PREMIUM_EASE,
+            }}
+            style={{ willChange: "opacity, transform" }}
+            className="
+              font-modern text-[13px] leading-[1.8]
+              tracking-[0.08em]
+              text-granite
+              max-w-[440px]
+            "
           >
-            Review System Architecture
-          </a>
-        </motion.div>
+            One conversation. We diagnose the blur.
+            We architect the ascent.
+          </motion.p>
 
-        {/* TERMINAL PROMPT */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ delay: 0.6, duration: 0.8 }}
-          style={{ willChange: 'opacity' }}
-          className="mt-16 text-center"
-        >
-          <p className="text-lucid/60 font-mono text-xs uppercase tracking-[0.3em]">
-            &gt; DEPLOYMENT_PROTOCOL_ACTIVE
-          </p>
-        </motion.div>
+          {/* CTA Button */}
+          <motion.div
+            initial={{ opacity: 0, y: 14 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{
+              delay:    STAGGER_ITEMS[3].delay,
+              duration: 0.7,
+              ease:     PREMIUM_EASE,
+            }}
+            style={{ willChange: "opacity, transform" }}
+            className="mt-4"
+          >
+            <button
+              onClick={openCalLink}
+              aria-label="Begin the Ascent — schedule your clarity session"
+              className="
+                relative overflow-hidden
+                font-modern text-[11px] uppercase tracking-[0.2em]
+                px-12 py-5
+                text-obsidian bg-silver
+                border border-silver
+                transition-transform duration-200
+                hover:-translate-y-[2px]
+                focus-visible:outline-none
+                focus-visible:ring-1 focus-visible:ring-silver
+                focus-visible:ring-offset-2 focus-visible:ring-offset-obsidian
+                group
+                touch-manipulation
+              "
+            >
+              {/* Fill sweep left → right */}
+              <span
+                aria-hidden="true"
+                className="
+                  absolute inset-0
+                  bg-alabaster
+                  -translate-x-full
+                  transition-transform duration-300
+                  group-hover:translate-x-0
+                "
+                style={{ transitionTimingFunction: "cubic-bezier(0.16,1,0.3,1)" }}
+              />
+              <span className="relative z-10">Begin the Ascent</span>
+            </button>
+          </motion.div>
 
+          {/* Tagline */}
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={inView ? { opacity: 1 } : {}}
+            transition={{
+              delay:    STAGGER_ITEMS[4].delay,
+              duration: 0.6,
+              ease:     "easeOut",
+            }}
+            className="
+              font-ancient
+              text-[11px] uppercase tracking-[0.3em]
+              text-silver-dim
+              mt-2
+            "
+          >
+            Epopteia. Supreme Vision.
+          </motion.p>
+
+        </div>
       </div>
     </section>
-  );
+  )
 }
