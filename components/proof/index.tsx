@@ -1,279 +1,317 @@
-"use client";
-import React, { useRef, useState, memo, useEffect } from "react";
-import { motion, useInView } from "framer-motion";
-import dynamic from "next/dynamic";
+"use client"
 
-// Lazy load simulations with loading placeholders
-const PrismSimulation = dynamic(() => import("./Prism"), { 
-  ssr: false,
-  loading: () => (
-    <div className="w-full h-full bg-basalt animate-pulse flex items-center justify-center">
-      <div className="text-granite text-xs font-mono">Loading Prism...</div>
-    </div>
-  )
-});
+import { useState, useEffect, useRef, useCallback } from "react"
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion"
+import type { SystemData, CarouselState } from "./types"
 
-const SentrySimulation = dynamic(() => import("./Sentry"), { 
-  ssr: false,
-  loading: () => (
-    <div className="w-full h-full bg-basalt animate-pulse flex items-center justify-center">
-      <div className="text-granite text-xs font-mono">Loading Sentry...</div>
-    </div>
-  )
-});
+/* ── CONSTANTS ───────────────────────────────────────────────────────────── */
+const PREMIUM_EASE: [number, number, number, number] = [0.16, 1, 0.3, 1]
+const HOVER_INTERVAL_MS  = 1500
+const MOBILE_INTERVAL_MS = 3000
+const STATE_COUNT        = 3
 
-const OverwatchSimulation = dynamic(() => import("./Overwatch"), { 
-  ssr: false,
-  loading: () => (
-    <div className="w-full h-full bg-basalt animate-pulse flex items-center justify-center">
-      <div className="text-granite text-xs font-mono">Loading Overwatch...</div>
-    </div>
-  )
-});
-
-export default function Proof() {
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
-    checkMobile();
-    
-    let timeoutId: NodeJS.Timeout;
-    const handleResize = () => {
-      clearTimeout(timeoutId);
-      timeoutId = setTimeout(checkMobile, 150);
-    };
-    
-    window.addEventListener("resize", handleResize, { passive: true });
-    return () => {
-      clearTimeout(timeoutId);
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
-
-  const premiumEase: [number, number, number, number] = [0.25, 0.1, 0.25, 1.0];
-
-  return (
-    <section 
-      id="proof" 
-      className="relative w-full bg-obsidian py-24 md:py-48 overflow-hidden"
-      aria-labelledby="proof-heading"
-    >
-      {/* Background Texture - Disabled on mobile */}
-      {!isMobile && (
-        <div 
-          className="absolute inset-0 opacity-20 pointer-events-none mix-blend-overlay"
-          style={{ 
-            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E")`,
-            transform: 'translateZ(0)'
-          }}
-          aria-hidden="true"
-        />
-      )}
-      <div 
-        className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,240,255,0.03)_0%,rgba(0,0,0,0)_60%)]"
-        style={{ transform: 'translateZ(0)' }}
-        aria-hidden="true"
-      />
-      
-      <div className="relative z-10 max-w-6xl mx-auto px-6 space-y-32 md:space-y-48">
-        
-        {/* SYSTEM BOOT HEADLINE */}
-        <SystemBootHeadline premiumEase={premiumEase} isMobile={isMobile} />
-
-        <ShowcaseContainer 
-          number="01" 
-          title="The Prism" 
-          subtitle="Intelligent Data Fracturing" 
-          align="left"
-          premiumEase={premiumEase}
-        >
-          <PrismSimulation />
-        </ShowcaseContainer>
-
-        <ShowcaseContainer 
-          number="02" 
-          title="The Sentry" 
-          subtitle="Autonomous Triage Engine" 
-          align="right"
-          premiumEase={premiumEase}
-        >
-          <SentrySimulation />
-        </ShowcaseContainer>
-
-        <ShowcaseContainer 
-          number="03" 
-          title="The Overwatch" 
-          subtitle="Predictive Strategy Core" 
-          align="left"
-          premiumEase={premiumEase}
-        >
-          <OverwatchSimulation />
-        </ShowcaseContainer>
-
-      </div>
-    </section>
-  );
+const STATE_LABELS: Record<CarouselState, string> = {
+  0: "The Fog",
+  1: "The Clear Sky",
+  2: "Stack Proof",
 }
 
-// MEMOIZED HEADLINE TO PREVENT RERENDERS
-const SystemBootHeadline = memo(function SystemBootHeadline({ 
-  premiumEase, 
-  isMobile 
-}: { 
-  premiumEase: [number, number, number, number];
-  isMobile: boolean;
-}) {
-  const [bootStage, setBootStage] = useState(0);
+/* ── CONTENT RENDERERS ───────────────────────────────────────────────────── */
+function FogContent({ data }: { data: SystemData["states"]["fog"] }) {
+  return (
+    <div className="flex flex-col gap-4">
+      <span className="
+        font-modern text-[9px] uppercase tracking-[0.25em]
+        text-silver-dim
+      ">
+        {data.heading}
+      </span>
+      <p className="font-modern text-[13px] leading-[1.8] text-granite">
+        {data.body}
+      </p>
+    </div>
+  )
+}
 
-  useEffect(() => {
-    const timers: NodeJS.Timeout[] = [];
-    const delays = isMobile ? [300, 800, 1200] : [500, 1200, 2000];
-    
-    timers.push(setTimeout(() => setBootStage(1), delays[0]));
-    timers.push(setTimeout(() => setBootStage(2), delays[1]));
-    timers.push(setTimeout(() => setBootStage(3), delays[2]));
-    
-    return () => timers.forEach(clearTimeout);
-  }, [isMobile]);
+function ClearSkyContent({ data }: { data: SystemData["states"]["clearSky"] }) {
+  /* Split body at accent phrase to highlight it */
+  const parts = data.body.split(data.accent)
 
   return (
-    <header 
-      className="text-center mb-20 md:mb-32 min-h-[200px] flex flex-col items-center justify-center"
-      id="proof-heading"
-    >
-      {/* BOOT SEQUENCE */}
-      <div className="mb-8 space-y-2 font-mono text-xs text-lucid/60 h-16">
-        {bootStage >= 1 && (
-          <motion.div 
-            initial={{ opacity: 0 }} 
-            animate={{ opacity: 1 }}
-            style={{ willChange: 'opacity' }}
-            className="tracking-widest"
-          >
-            [SYSTEM_INIT]
-          </motion.div>
-        )}
-        {bootStage >= 2 && (
-          <motion.div 
-            initial={{ opacity: 0 }} 
-            animate={{ opacity: 1 }}
-            style={{ willChange: 'opacity' }}
-            className="tracking-widest"
-          >
-            &gt; LOADING_PROOF_LAYER...
-          </motion.div>
-        )}
-        {bootStage >= 3 && (
-          <motion.div 
-            initial={{ opacity: 0 }} 
-            animate={{ opacity: 1 }}
-            style={{ willChange: 'opacity' }}
-            className="tracking-widest text-emerald-400/80"
-          >
-            &gt; SYSTEMS_ONLINE
-          </motion.div>
-        )}
-      </div>
+    <div className="flex flex-col gap-4">
+      <span className="
+        font-modern text-[9px] uppercase tracking-[0.25em]
+        text-silver
+      ">
+        {data.heading}
+      </span>
+      <p className="font-modern text-[13px] leading-[1.8] text-alabaster">
+        {parts[0]}
+        <span className="text-silver font-medium">{data.accent}</span>
+        {parts[1]}
+      </p>
+    </div>
+  )
+}
 
-      {/* MAIN HEADLINE */}
-      {bootStage >= 3 && (
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.3, ease: premiumEase }}
-          style={{ willChange: 'opacity, transform' }}
-        >
-          <h2 className="text-ancient text-4xl md:text-6xl lg:text-7xl font-bold uppercase tracking-[0.15em] text-alabaster mb-4">
-            Systems in Production.
-          </h2>
-          <p className="text-modern text-granite text-xs md:text-sm tracking-[0.3em] uppercase">
-            Deployed intelligence. Real interfaces. Zero vaporware.
-          </p>
-        </motion.div>
-      )}
-    </header>
-  );
-});
-
-function ShowcaseContainer({ 
-  number, 
-  title, 
-  subtitle, 
-  children, 
-  align,
-  premiumEase 
-}: {
-  number: string;
-  title: string;
-  subtitle: string;
-  children: React.ReactNode;
-  align: "left" | "right";
-  premiumEase: [number, number, number, number];
-}) {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
-
+function StackContent({ data }: { data: SystemData["states"]["stack"] }) {
   return (
-    <article 
-      ref={ref} 
-      className={`flex flex-col ${align === "right" ? "md:items-end" : "md:items-start"} gap-8`}
-    >
-      
-      {/* HEADER */}
-      <div className={`flex flex-col ${align === "right" ? "md:items-end md:text-right" : "md:items-start md:text-left"}`}>
-        <div className="flex items-center gap-3 mb-2">
-          <span className="text-lucid font-mono text-sm tracking-widest">[{number}]</span>
-          <div className="h-px w-12 bg-lucid/50" aria-hidden="true" />
-        </div>
-        <h3 className="text-ancient text-2xl md:text-4xl lg:text-5xl text-alabaster uppercase tracking-wide mb-2">
-          {title}
-        </h3>
-        <p className="text-granite font-mono text-xs tracking-[0.2em] uppercase">
-          {subtitle}
-        </p>
-      </div>
-
-      {/* HUD CONTAINER */}
-      <motion.div 
-        initial={{ opacity: 0, y: 40 }}
-        animate={isInView ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 0.8, ease: premiumEase }}
-        style={{ willChange: 'opacity, transform' }}
-        className="w-full h-[350px] md:h-[550px] bg-basalt border border-white/10 overflow-hidden relative group rounded-sm"
+    <div className="flex flex-col gap-4">
+      <span className="
+        font-modern text-[9px] uppercase tracking-[0.25em]
+        text-silver-dim
+      ">
+        {data.heading}
+      </span>
+      <ul
+        aria-label="Technical stack"
+        className="flex flex-col gap-2"
       >
-        {/* TERMINAL HEADER */}
-        <div className="absolute top-0 left-0 right-0 h-8 bg-white/5 border-b border-white/5 flex items-center px-4 justify-between z-30 select-none backdrop-blur-sm">
-          <div className="flex items-center gap-4">
-            <div className="flex gap-1" aria-hidden="true">
-              <div className="w-1 h-1 bg-lucid/50 rounded-full" />
-              <div className="w-1 h-1 bg-lucid/30 rounded-full" />
-            </div>
-            <span className="text-[10px] text-lucid/80 font-mono tracking-widest uppercase hidden sm:inline-block">
-              SYS_ID: {title.toUpperCase().replace(" ", "_")}
+        {data.items.map((item) => (
+          <li
+            key={item}
+            className="
+              font-modern text-[12px] leading-[1.6]
+              text-granite
+              flex items-start gap-2
+            "
+          >
+            <span aria-hidden="true" className="text-silver-dim mt-px shrink-0">
+              &gt;
             </span>
-          </div>
-          
-          <div className="flex items-center gap-3">
-            <div className="px-2 py-0.5 border border-emerald-500/30 bg-emerald-500/10 text-[8px] text-emerald-400 font-mono uppercase tracking-wider">
-              ONLINE
-            </div>
-            <div 
-              className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"
-              aria-label="System online indicator"
-            />
-          </div>
-        </div>
-        
-        {/* CONTENT */}
-        <div className="pt-8 h-full w-full relative bg-obsidian/50">{children}</div>
-        
-        {/* HOVER BORDER GLOW - Desktop only */}
-        <div 
-          className="absolute inset-0 pointer-events-none border border-lucid/0 hover:border-lucid/20 transition-all duration-500 hidden md:block"
-          aria-hidden="true"
+            {item}
+          </li>
+        ))}
+      </ul>
+    </div>
+  )
+}
+
+/* ── STATE DOTS ──────────────────────────────────────────────────────────── */
+function StateDots({
+  active,
+  total,
+}: {
+  active: CarouselState
+  total:  number
+}) {
+  return (
+    <div
+      aria-hidden="true"
+      className="flex items-center gap-[6px]"
+    >
+      {Array.from({ length: total }).map((_, i) => (
+        <motion.span
+          key={i}
+          animate={{
+            width:           i === active ? 16 : 4,
+            backgroundColor: i === active ? "#C0C0C0" : "#666666",
+          }}
+          transition={{ duration: 0.3, ease: PREMIUM_EASE }}
+          style={{ willChange: "width, background-color" }}
+          className="h-[3px] rounded-none"
         />
-      </motion.div>
-    </article>
-  );
+      ))}
+    </div>
+  )
+}
+
+/* ── SYSTEM CARD ─────────────────────────────────────────────────────────── */
+interface SystemCardProps {
+  system:  SystemData
+  inView:  boolean
+  index:   number
+  isMobile: boolean
+}
+
+export function SystemCard({ system, inView, index, isMobile }: SystemCardProps) {
+  const [activeState, setActiveState] = useState<CarouselState>(0)
+  const intervalRef                   = useRef<ReturnType<typeof setInterval> | null>(null)
+  const prefersReduced                = useReducedMotion()
+
+  const advance = useCallback(() => {
+    setActiveState((prev) => ((prev + 1) % STATE_COUNT) as CarouselState)
+  }, [])
+
+  const reset = useCallback(() => {
+    setActiveState(0)
+  }, [])
+
+  const clearTimer = useCallback(() => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current)
+      intervalRef.current = null
+    }
+  }, [])
+
+  /* Mobile: auto-cycle every 3s */
+  useEffect(() => {
+    if (!isMobile || prefersReduced) return
+    intervalRef.current = setInterval(advance, MOBILE_INTERVAL_MS)
+    return clearTimer
+  }, [isMobile, prefersReduced, advance, clearTimer])
+
+  /* Desktop: start cycling on hover */
+  const handleMouseEnter = useCallback(() => {
+    if (isMobile || prefersReduced) return
+    clearTimer()
+    intervalRef.current = setInterval(advance, HOVER_INTERVAL_MS)
+  }, [isMobile, prefersReduced, advance, clearTimer])
+
+  /* Desktop: reset on hover exit */
+  const handleMouseLeave = useCallback(() => {
+    if (isMobile || prefersReduced) return
+    clearTimer()
+    reset()
+  }, [isMobile, prefersReduced, clearTimer, reset])
+
+  /* Tablet: tap advances state, wraps to 0 */
+  const handleTap = useCallback(() => {
+    if (!isMobile) return
+    advance()
+  }, [isMobile, advance])
+
+  /* Cleanup on unmount */
+  useEffect(() => clearTimer, [clearTimer])
+
+  /* Content animation — explicit TargetAndTransition objects.
+     Avoids the variant-label/initial prop type conflict in Framer Motion. */
+  const contentEnter  = { opacity: 0, y: 10  } as const
+  const contentCenter = { opacity: 1, y: 0   } as const
+  const contentExit   = { opacity: 0, y: -10 } as const
+
+  const currentLabel = STATE_LABELS[activeState]
+
+  return (
+    <motion.article
+      aria-label={`${system.name} — ${system.industry}. Current view: ${currentLabel}`}
+      aria-roledescription="carousel card"
+      initial={{ opacity: 0, y: 20 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{
+        delay:    index * 0.15,
+        duration: 0.7,
+        ease:     PREMIUM_EASE,
+      }}
+      style={{ willChange: "opacity, transform" }}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      onClick={handleTap}
+      className="
+        group relative
+        bg-basalt
+        flex flex-col
+        overflow-hidden
+        transition-colors duration-300
+        hover:bg-basalt-lift
+        cursor-default
+        md:cursor-pointer
+        focus-within:outline-none
+        focus-within:ring-1 focus-within:ring-silver
+      "
+    >
+      {/* Top silver accent line — slides in on hover */}
+      <span
+        aria-hidden="true"
+        className="
+          absolute top-0 left-0
+          h-px w-0 bg-silver
+          transition-[width] duration-500
+          group-hover:w-full
+        "
+        style={{ transitionTimingFunction: "cubic-bezier(0.16,1,0.3,1)" }}
+      />
+
+      {/* ── CARD HEADER ────────────────────────────────────────────────── */}
+      <div className="px-8 pt-8 pb-6 border-b border-border">
+        <span className="
+          block font-modern text-[9px] uppercase tracking-[0.25em]
+          text-silver-dim mb-3
+        ">
+          {system.industry}
+        </span>
+
+        <h3 className="
+          font-ancient font-bold
+          text-[clamp(20px,2vw,28px)]
+          tracking-[0.08em] leading-none
+          text-alabaster mb-2
+        ">
+          {system.name}
+        </h3>
+
+        <span className="
+          font-modern text-[10px] uppercase tracking-[0.15em]
+          text-silver-dim
+        ">
+          {system.subtitle}
+        </span>
+      </div>
+
+      {/* ── CAROUSEL CONTENT AREA ──────────────────────────────────────── */}
+      {/*    Fixed min-height prevents layout shift during state transitions */}
+      <div
+        className="px-8 py-6 flex-1 min-h-[200px]"
+        aria-live="polite"
+        aria-atomic="true"
+        aria-label={`System details — ${currentLabel}`}
+      >
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeState}
+            initial={contentEnter}
+            animate={contentCenter}
+            exit={contentExit}
+            transition={{ duration: 0.35, ease: PREMIUM_EASE }}
+            style={{ willChange: "opacity, transform" }}
+          >
+            {activeState === 0 && (
+              <FogContent data={system.states.fog} />
+            )}
+            {activeState === 1 && (
+              <ClearSkyContent data={system.states.clearSky} />
+            )}
+            {activeState === 2 && (
+              <StackContent data={system.states.stack} />
+            )}
+          </motion.div>
+        </AnimatePresence>
+      </div>
+
+      {/* ── CARD FOOTER ────────────────────────────────────────────────── */}
+      <div className="
+        px-8 pb-8 pt-4
+        flex items-center justify-between
+        border-t border-border
+      ">
+        <StateDots active={activeState} total={STATE_COUNT} />
+
+        {/* Interaction hint — desktop only, fades out once hovered */}
+        <span
+          aria-hidden="true"
+          className="
+            font-modern text-[9px] uppercase tracking-[0.15em]
+            text-silver-dim
+            opacity-100 group-hover:opacity-0
+            transition-opacity duration-300
+            hidden md:block
+          "
+        >
+          Hover to reveal
+        </span>
+
+        {/* Mobile tap hint */}
+        <span
+          aria-hidden="true"
+          className="
+            font-modern text-[9px] uppercase tracking-[0.15em]
+            text-silver-dim
+            md:hidden
+          "
+        >
+          Tap to advance
+        </span>
+      </div>
+    </motion.article>
+  )
 }
