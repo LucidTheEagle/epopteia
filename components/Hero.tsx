@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react"
 import { motion, useReducedMotion } from "framer-motion"
-import { Spotlight } from "./ui/spotlight"
+import { Spotlight }          from "./ui/spotlight"
 import { TextGenerateEffect } from "./ui/text-generate-effect"
 
 /* ── CONSTANTS ───────────────────────────────────────────────────────────── */
@@ -14,8 +14,9 @@ const DECLARATION =
 
 const BRAND_LETTERS = "EPOPTEIA".split("")
 
+const CAL_LINK = "https://cal.com/lucid-theeagle-ebabkz/begin-the-ascent"
+
 /* ── SACRED GEOMETRY SVG ─────────────────────────────────────────────────── */
-/*    Alchemical compass rings — pure CSS rotation, no JS                     */
 function GeometryRings() {
   return (
     <div aria-hidden="true" className="absolute inset-0 pointer-events-none overflow-hidden">
@@ -27,21 +28,12 @@ function GeometryRings() {
         <svg viewBox="0 0 900 900" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full opacity-[0.04]">
           <circle cx="450" cy="450" r="448" stroke="#C0C0C0" strokeWidth="0.5" />
           <circle cx="450" cy="450" r="320" stroke="#C0C0C0" strokeWidth="0.5" />
-          {/* Hexagram construction lines */}
           <line x1="450" y1="2"   x2="450" y2="898" stroke="#C0C0C0" strokeWidth="0.3" />
           <line x1="2"   y1="450" x2="898" y2="450" stroke="#C0C0C0" strokeWidth="0.3" />
           <line x1="127" y1="127" x2="773" y2="773" stroke="#C0C0C0" strokeWidth="0.3" />
           <line x1="773" y1="127" x2="127" y2="773" stroke="#C0C0C0" strokeWidth="0.3" />
-          {/* Outer hexagon */}
-          <polygon
-            points="450,2 840,226 840,674 450,898 60,674 60,226"
-            stroke="#C0C0C0" strokeWidth="0.3" fill="none"
-          />
-          {/* Inner hexagon rotated */}
-          <polygon
-            points="450,130 750,300 750,600 450,770 150,600 150,300"
-            stroke="#C0C0C0" strokeWidth="0.3" fill="none"
-          />
+          <polygon points="450,2 840,226 840,674 450,898 60,674 60,226"   stroke="#C0C0C0" strokeWidth="0.3" fill="none" />
+          <polygon points="450,130 750,300 750,600 450,770 150,600 150,300" stroke="#C0C0C0" strokeWidth="0.3" fill="none" />
         </svg>
       </div>
 
@@ -53,17 +45,12 @@ function GeometryRings() {
         <svg viewBox="0 0 500 500" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full opacity-[0.03]">
           <circle cx="250" cy="250" r="248" stroke="#C0C0C0" strokeWidth="0.5" />
           <circle cx="250" cy="250" r="160" stroke="#C0C0C0" strokeWidth="0.5" />
-          {/* Inner compass */}
           <line x1="250" y1="2"   x2="250" y2="498" stroke="#C0C0C0" strokeWidth="0.4" />
           <line x1="2"   y1="250" x2="498" y2="250" stroke="#C0C0C0" strokeWidth="0.4" />
-          <polygon
-            points="250,2 498,126 498,374 250,498 2,374 2,126"
-            stroke="#C0C0C0" strokeWidth="0.4" fill="none"
-          />
-          {/* Eye at center */}
+          <polygon points="250,2 498,126 498,374 250,498 2,374 2,126" stroke="#C0C0C0" strokeWidth="0.4" fill="none" />
           <ellipse cx="250" cy="250" rx="40" ry="20" stroke="#C0C0C0" strokeWidth="0.5" fill="none" />
-          <circle  cx="250" cy="250" r="8"   stroke="#C0C0C0" strokeWidth="0.5" fill="none" />
-          <circle  cx="250" cy="250" r="2"   fill="#C0C0C0" opacity="0.4" />
+          <circle  cx="250" cy="250" r="8"  stroke="#C0C0C0" strokeWidth="0.5" fill="none" />
+          <circle  cx="250" cy="250" r="2"  fill="#C0C0C0" opacity="0.4" />
         </svg>
       </div>
 
@@ -83,10 +70,7 @@ function GeometryRings() {
 /* ── BRAND NAME WITH LETTER STAGGER ──────────────────────────────────────── */
 function BrandName({ startDelay }: { startDelay: number }) {
   return (
-    <div
-      aria-label="Epopteia"
-      className="flex items-center justify-center"
-    >
+    <div aria-label="Epopteia" className="flex items-center justify-center">
       {BRAND_LETTERS.map((letter, i) => (
         <motion.span
           key={`${letter}-${i}`}
@@ -123,9 +107,7 @@ function ScrollIndicator({ delay }: { delay: number }) {
       aria-hidden="true"
       className="flex flex-col items-center gap-3 mt-16"
     >
-      <div
-        className="animate-scroll-pulse w-px h-8 bg-gradient-to-b from-transparent to-granite"
-      />
+      <div className="animate-scroll-pulse w-px h-8 bg-gradient-to-b from-transparent to-granite" />
       <span className="font-modern text-[10px] uppercase tracking-[0.2em] text-granite">
         Descend
       </span>
@@ -156,18 +138,14 @@ function HeroCTA({ delay, onClick }: { delay: number; onClick: () => void }) {
           focus-visible:outline-none focus-visible:ring-1
           focus-visible:ring-silver focus-visible:ring-offset-2
           focus-visible:ring-offset-obsidian
-          group
-          touch-manipulation
+          group touch-manipulation
         "
       >
-        {/* Fill sweep */}
         <span
           aria-hidden="true"
           className="
-            absolute inset-0
-            bg-alabaster
-            -translate-x-full
-            transition-transform duration-300
+            absolute inset-0 bg-alabaster
+            -translate-x-full transition-transform duration-300
             group-hover:translate-x-0
           "
           style={{ transitionTimingFunction: "cubic-bezier(0.16,1,0.3,1)" }}
@@ -180,17 +158,26 @@ function HeroCTA({ delay, onClick }: { delay: number; onClick: () => void }) {
 
 /* ── MAIN COMPONENT ──────────────────────────────────────────────────────── */
 export default function Hero() {
-  const [hasHydrated, setHasHydrated] = useState(false)
-  const [isMobile,    setIsMobile]    = useState(false)
-  const prefersReduced                = useReducedMotion()
-  const rafRef                        = useRef<number>(0)
+  const [isMobile, setIsMobile] = useState(false)
+  const prefersReduced          = useReducedMotion()
+  const rafRef                  = useRef<number>(0)
 
+  /*
+   * Mobile detection only — no hasHydrated gate.
+   *
+   * The original code wrapped TextGenerateEffect in a hasHydrated check.
+   * This caused the animation to fire twice:
+   *   1. On mount — SSR fallback renders
+   *   2. When hasHydrated flips true — TextGenerateEffect mounts fresh
+   *      and its useAnimate fires again from scratch
+   *
+   * Fix: render TextGenerateEffect unconditionally on the client.
+   * The SSR fallback <p> only needs to guard against CLS on first paint —
+   * it does not need to persist until hydration. Remove the gate entirely
+   * and let TextGenerateEffect animate exactly once on mount.
+   */
   useEffect(() => {
-    setHasHydrated(true)
-
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768)
-    }
+    const checkMobile = () => setIsMobile(window.innerWidth < 768)
     checkMobile()
 
     const handleResize = () => {
@@ -206,14 +193,11 @@ export default function Hero() {
   }, [])
 
   const openCalLink = () => {
-    // TODO: replace # with Epopteia Cal.com link when available
-    window.open("#", "_blank", "noopener,noreferrer")
+    window.open(CAL_LINK, "_blank", "noopener,noreferrer")
   }
 
-  /* When reduced motion is preferred, collapse all delays to near-zero */
   const t = (base: number) => (prefersReduced ? 0 : base)
 
-  /* Letter stagger starts after TextGenerateEffect completes */
   const letterStaggerStart = isMobile ? 1.2 : 2.0
 
   return (
@@ -223,16 +207,15 @@ export default function Hero() {
       className="
         relative min-h-screen w-full
         flex flex-col items-center justify-center
-        overflow-hidden
-        px-6
-        pt-[72px] {/* offset fixed nav */}
+        overflow-hidden px-6
+        pt-[72px]
       "
     >
       {/* ── BACKGROUND ─────────────────────────────────────────────────── */}
       <GeometryRings />
 
-      {/* Spotlight — desktop only, silver-tuned */}
-      {hasHydrated && !isMobile && (
+      {/* Spotlight — suppressed on mobile for performance */}
+      {!isMobile && (
         <>
           <Spotlight
             className="-top-40 left-0 md:left-60 md:-top-20"
@@ -246,14 +229,12 @@ export default function Hero() {
       )}
 
       {/* ── CONTENT ────────────────────────────────────────────────────── */}
-      <div
-        className="
-          relative z-10 w-full
-          max-w-[800px] mx-auto
-          text-center
-          flex flex-col items-center
-        "
-      >
+      <div className="
+        relative z-10 w-full
+        max-w-[800px] mx-auto
+        text-center
+        flex flex-col items-center
+      ">
 
         {/* Eyebrow */}
         <motion.div
@@ -261,60 +242,29 @@ export default function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: t(0.2), duration: 0.7, ease: PREMIUM_EASE }}
           style={{ willChange: "opacity, transform" }}
-          className="
-            font-modern text-[10px] uppercase tracking-[0.35em]
-            text-silver mb-12
-          "
+          className="font-modern text-[10px] uppercase tracking-[0.35em] text-silver mb-12"
           aria-hidden="true"
         >
           — Clarity Architecture
         </motion.div>
 
-        {/* Declaration */}
+        {/* Declaration — no hasHydrated gate, animates exactly once */}
         <div className="mb-12 md:mb-16 max-w-[680px]">
-          {hasHydrated ? (
-            <TextGenerateEffect
-              words={DECLARATION}
-              className="
-                font-ancient font-normal
-                text-[clamp(18px,2.8vw,32px)]
-                leading-[1.55] tracking-[0.03em]
-                text-alabaster
-              "
-              filter={!isMobile && !prefersReduced}
-              duration={isMobile ? 0.3 : 0.7}
-            />
-          ) : (
-            /* SSR fallback — prevents CLS, matches final rendered output */
-            <p
-              className="
-                font-ancient font-normal
-                text-[clamp(18px,2.8vw,32px)]
-                leading-[1.55] tracking-[0.03em]
-                text-alabaster
-              "
-            >
-              {DECLARATION}
-            </p>
-          )}
+          <TextGenerateEffect
+            words={DECLARATION}
+            className="
+              font-ancient font-normal
+              text-[clamp(18px,2.8vw,32px)]
+              leading-[1.55] tracking-[0.03em]
+              text-alabaster
+            "
+            filter={!isMobile && !prefersReduced}
+            duration={isMobile ? 0.3 : 0.7}
+          />
         </div>
 
         {/* Brand name — letter stagger */}
-        {hasHydrated ? (
-          <BrandName startDelay={t(letterStaggerStart)} />
-        ) : (
-          <p
-            aria-label="Epopteia"
-            className="
-              font-ancient font-black
-              text-[clamp(52px,9vw,112px)]
-              tracking-[0.12em] leading-none
-              text-alabaster
-            "
-          >
-            EPOPTEIA
-          </p>
-        )}
+        <BrandName startDelay={t(letterStaggerStart)} />
 
         {/* Subline */}
         <motion.p
