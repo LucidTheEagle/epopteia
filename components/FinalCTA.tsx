@@ -6,12 +6,14 @@ import { motion, useInView } from "framer-motion"
 /* ── CONSTANTS ───────────────────────────────────────────────────────────── */
 const PREMIUM_EASE: [number, number, number, number] = [0.16, 1, 0.3, 1]
 
+const CAL_LINK = "https://cal.com/lucid-theeagle-ebabkz/begin-the-ascent"
+
 const STAGGER_ITEMS = [
-  { id: "eyebrow",  delay: 0    },
-  { id: "heading",  delay: 0.15 },
-  { id: "subline",  delay: 0.30 },
-  { id: "cta",      delay: 0.45 },
-  { id: "tagline",  delay: 0.60 },
+  { id: "eyebrow", delay: 0    },
+  { id: "heading", delay: 0.15 },
+  { id: "subline", delay: 0.30 },
+  { id: "cta",     delay: 0.45 },
+  { id: "tagline", delay: 0.60 },
 ] as const
 
 /* ── GEOMETRY RINGS — static, no rotation (distinct from Hero) ───────────── */
@@ -22,12 +24,7 @@ function StaticRings() {
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
         style={{ width: "min(700px,120vw)", height: "min(700px,120vw)" }}
       >
-        <svg
-          viewBox="0 0 700 700"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          className="w-full h-full opacity-[0.06]"
-        >
+        <svg viewBox="0 0 700 700" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full opacity-[0.06]">
           <circle cx="350" cy="350" r="348" stroke="#C0C0C0" strokeWidth="0.5" />
           <circle cx="350" cy="350" r="240" stroke="#C0C0C0" strokeWidth="0.5" />
           <circle cx="350" cy="350" r="140" stroke="#C0C0C0" strokeWidth="0.5" />
@@ -41,7 +38,6 @@ function StaticRings() {
           />
         </svg>
       </div>
-      {/* Radial silver glow — center */}
       <div
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none"
         style={{
@@ -61,10 +57,7 @@ export default function FinalCTA() {
 
   const inView = useInView(contentRef, { once: true, margin: "-80px" })
 
-  const openCalLink = () => {
-    // TODO: replace # with Epopteia Cal.com link when available
-    window.open("#", "_blank", "noopener,noreferrer")
-  }
+  const openBooking = () => window.open(CAL_LINK, "_blank", "noopener,noreferrer")
 
   return (
     <section
@@ -80,24 +73,16 @@ export default function FinalCTA() {
         geo-grid-overlay
       "
     >
-      {/* Static geometry rings — distinct from Hero's rotating rings */}
       <StaticRings />
 
       <div className="max-w-[1280px] mx-auto relative z-10">
-        <div
-          ref={contentRef}
-          className="flex flex-col items-center text-center gap-6"
-        >
+        <div ref={contentRef} className="flex flex-col items-center text-center gap-6">
 
           {/* Eyebrow */}
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{
-              delay:    STAGGER_ITEMS[0].delay,
-              duration: 0.7,
-              ease:     PREMIUM_EASE,
-            }}
+            transition={{ delay: STAGGER_ITEMS[0].delay, duration: 0.7, ease: PREMIUM_EASE }}
             style={{ willChange: "opacity, transform" }}
             aria-hidden="true"
             className="section-label"
@@ -110,11 +95,7 @@ export default function FinalCTA() {
             id="cta-heading"
             initial={{ opacity: 0, y: 16 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{
-              delay:    STAGGER_ITEMS[1].delay,
-              duration: 0.8,
-              ease:     PREMIUM_EASE,
-            }}
+            transition={{ delay: STAGGER_ITEMS[1].delay, duration: 0.8, ease: PREMIUM_EASE }}
             style={{ willChange: "opacity, transform" }}
             className="
               font-ancient font-black
@@ -131,16 +112,11 @@ export default function FinalCTA() {
           <motion.p
             initial={{ opacity: 0, y: 14 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{
-              delay:    STAGGER_ITEMS[2].delay,
-              duration: 0.7,
-              ease:     PREMIUM_EASE,
-            }}
+            transition={{ delay: STAGGER_ITEMS[2].delay, duration: 0.7, ease: PREMIUM_EASE }}
             style={{ willChange: "opacity, transform" }}
             className="
               font-modern text-[13px] leading-[1.8]
-              tracking-[0.08em]
-              text-granite
+              tracking-[0.08em] text-granite
               max-w-[440px]
             "
           >
@@ -148,20 +124,16 @@ export default function FinalCTA() {
             We architect the ascent.
           </motion.p>
 
-          {/* CTA Button */}
+          {/* CTA */}
           <motion.div
             initial={{ opacity: 0, y: 14 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{
-              delay:    STAGGER_ITEMS[3].delay,
-              duration: 0.7,
-              ease:     PREMIUM_EASE,
-            }}
+            transition={{ delay: STAGGER_ITEMS[3].delay, duration: 0.7, ease: PREMIUM_EASE }}
             style={{ willChange: "opacity, transform" }}
             className="mt-4"
           >
             <button
-              onClick={openCalLink}
+              onClick={openBooking}
               aria-label="Begin the Ascent — schedule your clarity session"
               className="
                 relative overflow-hidden
@@ -174,18 +146,14 @@ export default function FinalCTA() {
                 focus-visible:outline-none
                 focus-visible:ring-1 focus-visible:ring-silver
                 focus-visible:ring-offset-2 focus-visible:ring-offset-obsidian
-                group
-                touch-manipulation
+                group touch-manipulation
               "
             >
-              {/* Fill sweep left → right */}
               <span
                 aria-hidden="true"
                 className="
-                  absolute inset-0
-                  bg-alabaster
-                  -translate-x-full
-                  transition-transform duration-300
+                  absolute inset-0 bg-alabaster
+                  -translate-x-full transition-transform duration-300
                   group-hover:translate-x-0
                 "
                 style={{ transitionTimingFunction: "cubic-bezier(0.16,1,0.3,1)" }}
@@ -198,16 +166,10 @@ export default function FinalCTA() {
           <motion.p
             initial={{ opacity: 0 }}
             animate={inView ? { opacity: 1 } : {}}
-            transition={{
-              delay:    STAGGER_ITEMS[4].delay,
-              duration: 0.6,
-              ease:     "easeOut",
-            }}
+            transition={{ delay: STAGGER_ITEMS[4].delay, duration: 0.6, ease: "easeOut" }}
             className="
-              font-ancient
-              text-[11px] uppercase tracking-[0.3em]
-              text-silver-dim
-              mt-2
+              font-ancient text-[11px] uppercase tracking-[0.3em]
+              text-silver-dim mt-2
             "
           >
             Epopteia. Supreme Vision.

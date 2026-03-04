@@ -6,6 +6,8 @@ import { motion, AnimatePresence } from "framer-motion"
 /* ── CONSTANTS ───────────────────────────────────────────────────────────── */
 const PREMIUM_EASE: [number, number, number, number] = [0.16, 1, 0.3, 1]
 
+const CAL_LINK = "https://cal.com/lucid-theeagle-ebabkz/begin-the-ascent"
+
 /* Section IDs must match the id="" on each section component exactly:
    Systems.tsx  → id="work"
    Philosophy   → id="philosophy"
@@ -17,19 +19,13 @@ const NAV_LINKS = [
 ] as const
 
 /* ── ABSTRACT MENU ICON ──────────────────────────────────────────────────── */
-/*    Three lines that morph to an X — fog collapsing to a single point.    */
-/*    Top: full width. Middle: becomes diagonal. Bottom: shorter, offset.   */
 function EpopteiaMenuIcon({ isOpen }: { isOpen: boolean }) {
   return (
     <svg
-      width="24"
-      height="16"
-      viewBox="0 0 24 16"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
+      width="24" height="16" viewBox="0 0 24 16"
+      fill="none" xmlns="http://www.w3.org/2000/svg"
       aria-hidden="true"
     >
-      {/* Top line — full, collapses inward when open */}
       <motion.line
         x1="0" y1="1" x2="24" y2="1"
         stroke="currentColor" strokeWidth="1"
@@ -39,17 +35,12 @@ function EpopteiaMenuIcon({ isOpen }: { isOpen: boolean }) {
         }
         transition={{ duration: 0.35, ease: PREMIUM_EASE }}
       />
-      {/* Middle line — fades out on open (the two diagonals replace it) */}
       <motion.line
         x1="0" y1="8" x2="20" y2="8"
         stroke="currentColor" strokeWidth="1"
-        animate={isOpen
-          ? { opacity: 0 }
-          : { opacity: 1 }
-        }
+        animate={isOpen ? { opacity: 0 } : { opacity: 1 }}
         transition={{ duration: 0.2, ease: "easeOut" }}
       />
-      {/* Bottom line — shorter + offset, becomes second diagonal when open */}
       <motion.line
         x1="6" y1="15" x2="24" y2="15"
         stroke="currentColor" strokeWidth="1"
@@ -130,13 +121,10 @@ export default function Navigation() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const rafRef                              = useRef<number>(0)
 
-  /* Scroll state — rAF debounced, passive */
   useEffect(() => {
     const handleScroll = () => {
       cancelAnimationFrame(rafRef.current)
-      rafRef.current = requestAnimationFrame(() => {
-        setScrolled(window.scrollY > 50)
-      })
+      rafRef.current = requestAnimationFrame(() => setScrolled(window.scrollY > 50))
     }
     window.addEventListener("scroll", handleScroll, { passive: true })
     return () => {
@@ -145,13 +133,11 @@ export default function Navigation() {
     }
   }, [])
 
-  /* Body scroll lock when menu open */
   useEffect(() => {
     document.body.style.overflow = mobileMenuOpen ? "hidden" : ""
     return () => { document.body.style.overflow = "" }
   }, [mobileMenuOpen])
 
-  /* Escape key closes menu */
   useEffect(() => {
     if (!mobileMenuOpen) return
     const onKey = (e: KeyboardEvent) => {
@@ -165,21 +151,16 @@ export default function Navigation() {
 
   const scrollToSection = (id: string) => {
     closeMenu()
-    /* Wait for menu exit animation before scrolling */
     setTimeout(() => {
-      const el = document.getElementById(id)
-      if (el) el.scrollIntoView({ behavior: "smooth" })
+      document.getElementById(id)?.scrollIntoView({ behavior: "smooth" })
     }, 200)
   }
 
-  const openBooking = () => {
-    /* TODO: replace # with Epopteia Cal.com booking link */
-    window.open("#", "_blank", "noopener,noreferrer")
-  }
+  const openBooking = () => window.open(CAL_LINK, "_blank", "noopener,noreferrer")
 
   return (
     <>
-      {/* ── DESKTOP / TABLET NAV ─────────────────────────────────────────── */}
+      {/* ── DESKTOP NAV ──────────────────────────────────────────────────── */}
       <motion.nav
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -196,7 +177,6 @@ export default function Navigation() {
           }
         `}
       >
-        {/* Frosted glass backdrop — GPU composited */}
         <div
           aria-hidden="true"
           className="absolute inset-0 transition-all duration-300"
@@ -209,7 +189,6 @@ export default function Navigation() {
 
         <div className="relative max-w-[1280px] mx-auto px-6 md:px-10 h-[72px] flex items-center justify-between">
 
-          {/* Brand */}
           <button
             onClick={() => scrollToSection("hero")}
             aria-label="Epopteia — return to top"
@@ -225,7 +204,6 @@ export default function Navigation() {
             EPOPTEIA
           </button>
 
-          {/* Desktop links */}
           <div className="hidden md:flex items-center gap-8">
             {NAV_LINKS.map((link) => (
               <DesktopNavLink
@@ -237,7 +215,6 @@ export default function Navigation() {
             <NavCTAButton onClick={openBooking} />
           </div>
 
-          {/* Abstract Epopteia menu icon */}
           <button
             onClick={() => setMobileMenuOpen((prev) => !prev)}
             aria-label={mobileMenuOpen ? "Close navigation" : "Open navigation"}
@@ -272,7 +249,7 @@ export default function Navigation() {
             transition={{ duration: 0.25, ease: "easeOut" }}
             className="fixed inset-0 z-40 md:hidden"
           >
-            {/* Backdrop — handles both click and touch close */}
+            {/* Backdrop — tap anywhere on empty space closes */}
             <div
               aria-hidden="true"
               className="absolute inset-0 bg-obsidian/95 cursor-pointer"
@@ -281,16 +258,15 @@ export default function Navigation() {
               onTouchEnd={(e) => { e.preventDefault(); closeMenu() }}
             />
 
-            {/* Menu content — stopPropagation prevents backdrop close on link tap */}
-            <div
-              className="relative h-full flex flex-col items-center justify-center gap-10 px-6 z-10"
-              onClick={(e) => e.stopPropagation()}
-            >
-              {/* Nav links */}
+            {/* Content — NO stopPropagation on wrapper.
+                Tapping empty space bubbles to backdrop → closeMenu.
+                Each button handles its own stopPropagation.              */}
+            <div className="relative h-full flex flex-col items-center justify-center gap-10 px-6 z-10">
+
               {NAV_LINKS.map((link, i) => (
                 <motion.button
                   key={link.id}
-                  onClick={() => scrollToSection(link.id)}
+                  onClick={(e) => { e.stopPropagation(); scrollToSection(link.id) }}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.08 + 0.05, duration: 0.5, ease: PREMIUM_EASE }}
@@ -308,9 +284,8 @@ export default function Navigation() {
                 </motion.button>
               ))}
 
-              {/* Mobile CTA */}
               <motion.button
-                onClick={openBooking}
+                onClick={(e) => { e.stopPropagation(); openBooking() }}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{
@@ -334,20 +309,6 @@ export default function Navigation() {
                 Begin the Ascent
               </motion.button>
 
-              {/* Dismiss hint */}
-              <motion.p
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.5, duration: 0.4 }}
-                aria-hidden="true"
-                className="
-                  absolute bottom-10
-                  font-modern text-[10px] uppercase tracking-[0.2em]
-                  text-silver-dim
-                "
-              >
-                Tap anywhere to close
-              </motion.p>
             </div>
           </motion.div>
         )}
