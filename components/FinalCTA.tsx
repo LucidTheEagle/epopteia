@@ -1,180 +1,215 @@
 "use client"
 
-import { useRef } from "react"
-import { motion, useInView } from "framer-motion"
-
-/* ── CONSTANTS ───────────────────────────────────────────────────────────── */
-const PREMIUM_EASE: [number, number, number, number] = [0.16, 1, 0.3, 1]
-
 const CAL_LINK = "https://cal.com/lucid-theeagle-ebabkz/begin-the-ascent"
 
-const STAGGER_ITEMS = [
-  { id: "eyebrow", delay: 0    },
-  { id: "heading", delay: 0.15 },
-  { id: "subline", delay: 0.30 },
-  { id: "cta",     delay: 0.45 },
-  { id: "tagline", delay: 0.60 },
-] as const
-
-/* ── GEOMETRY RINGS — static, no rotation (distinct from Hero) ───────────── */
-function StaticRings() {
-  return (
-    <div aria-hidden="true" className="absolute inset-0 pointer-events-none overflow-hidden">
-      <div
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
-        style={{ width: "min(700px,120vw)", height: "min(700px,120vw)" }}
-      >
-        <svg viewBox="0 0 700 700" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full opacity-[0.06]">
-          <circle cx="350" cy="350" r="348" stroke="#C0C0C0" strokeWidth="0.5" />
-          <circle cx="350" cy="350" r="240" stroke="#C0C0C0" strokeWidth="0.5" />
-          <circle cx="350" cy="350" r="140" stroke="#C0C0C0" strokeWidth="0.5" />
-          <line x1="350" y1="2"   x2="350" y2="698" stroke="#C0C0C0" strokeWidth="0.3" />
-          <line x1="2"   y1="350" x2="698" y2="350" stroke="#C0C0C0" strokeWidth="0.3" />
-          <line x1="96"  y1="96"  x2="604" y2="604" stroke="#C0C0C0" strokeWidth="0.3" />
-          <line x1="604" y1="96"  x2="96"  y2="604" stroke="#C0C0C0" strokeWidth="0.3" />
-          <polygon
-            points="350,2 698,176 698,524 350,698 2,524 2,176"
-            stroke="#C0C0C0" strokeWidth="0.3" fill="none"
-          />
-        </svg>
-      </div>
-      <div
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none"
-        style={{
-          width:      "700px",
-          height:     "700px",
-          background: "radial-gradient(ellipse 60% 50% at 50% 50%, rgba(192,192,192,0.09) 0%, rgba(192,192,192,0.04) 40%, transparent 70%)",
-        }}
-      />
-    </div>
-  )
-}
-
-/* ── MAIN COMPONENT ──────────────────────────────────────────────────────── */
 export default function FinalCTA() {
-  const sectionRef = useRef<HTMLElement>(null)
-  const contentRef = useRef<HTMLDivElement>(null)
-
-  const inView = useInView(contentRef, { once: true, margin: "-80px" })
-
   const openBooking = () => window.open(CAL_LINK, "_blank", "noopener,noreferrer")
 
   return (
     <section
       id="cta"
-      ref={sectionRef}
       aria-labelledby="cta-heading"
-      className="
-        relative w-full
-        py-40 md:py-56
-        px-6
-        border-t border-border
-        overflow-hidden
-        geo-grid-overlay
-      "
+      style={{
+        background: "#3a6ea5",
+        padding: "0 16px 24px",
+        fontFamily: "'Tahoma', 'MS Sans Serif', Arial, sans-serif",
+      }}
     >
-      <StaticRings />
+      {/* Main dialog window */}
+      <div
+        className="win-window"
+        style={{
+          maxWidth: "700px",
+          margin: "0 auto",
+        }}
+      >
+        {/* Title bar */}
+        <div className="win-titlebar" style={{ justifyContent: "space-between" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+            <div
+              aria-hidden="true"
+              style={{
+                width: "14px",
+                height: "14px",
+                background: "linear-gradient(135deg, #fff 30%, #a6caf0 100%)",
+                border: "1px solid rgba(255,255,255,0.3)",
+                flexShrink: 0,
+              }}
+            />
+            <span>Epopteia — Clarity Session Scheduler</span>
+          </div>
+          <div className="flex items-center gap-[2px]" aria-hidden="true">
+            <button className="win-titlebar-btn" style={{ fontSize: "7px" }}>_</button>
+            <button className="win-titlebar-btn" style={{ fontSize: "7px" }}>□</button>
+            <button className="win-titlebar-btn" style={{ fontSize: "7px", color: "#000" }}>✕</button>
+          </div>
+        </div>
 
-      <div className="max-w-[1280px] mx-auto relative z-10">
-        <div ref={contentRef} className="flex flex-col items-center text-center gap-6">
-
-          {/* Eyebrow */}
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ delay: STAGGER_ITEMS[0].delay, duration: 0.7, ease: PREMIUM_EASE }}
-            style={{ willChange: "opacity, transform" }}
-            aria-hidden="true"
-            className="section-label"
+        {/* Dialog body */}
+        <div
+          style={{
+            background: "#d4d0c8",
+            padding: "20px 24px 16px",
+          }}
+        >
+          {/* Icon + message row — like a Windows MessageBox */}
+          <div
+            style={{
+              display: "flex",
+              alignItems: "flex-start",
+              gap: "16px",
+              marginBottom: "20px",
+            }}
           >
-            End of Fog
-          </motion.div>
+            {/* Big icon */}
+            <div
+              aria-hidden="true"
+              style={{
+                width: "48px",
+                height: "48px",
+                background: "linear-gradient(135deg, #0a246a 0%, #a6caf0 100%)",
+                border: "2px solid #fff",
+                outline: "1px solid #808080",
+                flexShrink: 0,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: "24px",
+                color: "#fff",
+                fontWeight: "bold",
+                fontFamily: "'Tahoma', Arial, sans-serif",
+              }}
+            >
+              E
+            </div>
 
-          {/* Heading */}
-          <motion.h2
-            id="cta-heading"
-            initial={{ opacity: 0, y: 16 }}
-            animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ delay: STAGGER_ITEMS[1].delay, duration: 0.8, ease: PREMIUM_EASE }}
-            style={{ willChange: "opacity, transform" }}
-            className="
-              font-ancient font-black
-              text-[clamp(36px,6vw,80px)]
-              tracking-[0.06em] leading-[1.1]
-              text-white
-              max-w-[700px]
-            "
+            {/* Message text */}
+            <div style={{ flex: 1 }}>
+              <div
+                style={{
+                  fontSize: "10px",
+                  color: "#808080",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.2em",
+                  fontFamily: "'Tahoma', Arial, sans-serif",
+                  marginBottom: "6px",
+                }}
+              >
+                — End of Fog
+              </div>
+              <h2
+                id="cta-heading"
+                style={{
+                  fontSize: "clamp(18px, 3vw, 28px)",
+                  fontWeight: "bold",
+                  color: "#0a246a",
+                  fontFamily: "'Tahoma', Arial, sans-serif",
+                  lineHeight: "1.2",
+                  marginBottom: "10px",
+                }}
+              >
+                The fog has a solution.
+              </h2>
+              <p
+                style={{
+                  fontSize: "11px",
+                  lineHeight: "1.7",
+                  color: "#444",
+                  fontFamily: "'Tahoma', Arial, sans-serif",
+                }}
+              >
+                One conversation. We diagnose the blur.
+                We architect the ascent.
+              </p>
+            </div>
+          </div>
+
+          {/* Separator */}
+          <hr style={{ border: "none", borderTop: "1px solid #808080", borderBottom: "1px solid #fff", marginBottom: "14px" }} />
+
+          {/* Detail area — sunken */}
+          <div
+            style={{
+              background: "#fff",
+              border: "1px solid",
+              borderColor: "#808080 #fff #fff #808080",
+              padding: "10px 12px",
+              marginBottom: "16px",
+              display: "flex",
+              flexDirection: "column",
+              gap: "6px",
+            }}
           >
-            The fog has a solution.
-          </motion.h2>
+            {[
+              { key: "Engagement:",   value: "One clarity session" },
+              { key: "Duration:",     value: "45 minutes" },
+              { key: "Outcome:",      value: "Root cause identified. Ascent designed." },
+              { key: "Cost:",         value: "One conversation" },
+            ].map((row) => (
+              <div
+                key={row.key}
+                style={{
+                  display: "flex",
+                  gap: "12px",
+                  fontSize: "11px",
+                  fontFamily: "'Tahoma', Arial, sans-serif",
+                  borderBottom: "1px dotted #d4d0c8",
+                  paddingBottom: "3px",
+                }}
+              >
+                <span style={{ color: "#808080", width: "90px", flexShrink: 0 }}>{row.key}</span>
+                <span style={{ color: "#000" }}>{row.value}</span>
+              </div>
+            ))}
+          </div>
 
-          {/* Subline */}
-          <motion.p
-            initial={{ opacity: 0, y: 14 }}
-            animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ delay: STAGGER_ITEMS[2].delay, duration: 0.7, ease: PREMIUM_EASE }}
-            style={{ willChange: "opacity, transform" }}
-            className="
-              font-modern text-[13px] leading-[1.8]
-              tracking-[0.08em] text-granite
-              max-w-[440px]
-            "
-          >
-            One conversation. We diagnose the blur.
-            We architect the ascent.
-          </motion.p>
-
-          {/* CTA */}
-          <motion.div
-            initial={{ opacity: 0, y: 14 }}
-            animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ delay: STAGGER_ITEMS[3].delay, duration: 0.7, ease: PREMIUM_EASE }}
-            style={{ willChange: "opacity, transform" }}
-            className="mt-4"
+          {/* Button row */}
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              gap: "8px",
+            }}
           >
             <button
               onClick={openBooking}
+              className="win-btn win-btn-default"
               aria-label="Begin the Ascent — schedule your clarity session"
-              className="
-                relative overflow-hidden
-                font-modern text-[11px] uppercase tracking-[0.2em]
-                px-12 py-5
-                text-obsidian bg-silver
-                border border-silver
-                transition-transform duration-200
-                hover:-translate-y-[2px]
-                focus-visible:outline-none
-                focus-visible:ring-1 focus-visible:ring-silver
-                focus-visible:ring-offset-2 focus-visible:ring-offset-obsidian
-                group touch-manipulation
-              "
+              style={{
+                fontSize: "11px",
+                padding: "5px 28px",
+                fontFamily: "'Tahoma', Arial, sans-serif",
+                fontWeight: "bold",
+              }}
             >
-              <span
-                aria-hidden="true"
-                className="
-                  absolute inset-0 bg-alabaster
-                  -translate-x-full transition-transform duration-300
-                  group-hover:translate-x-0
-                "
-                style={{ transitionTimingFunction: "cubic-bezier(0.16,1,0.3,1)" }}
-              />
-              <span className="relative z-10">Begin the Ascent</span>
+              Begin the Ascent
             </button>
-          </motion.div>
+            <button
+              className="win-btn"
+              style={{
+                fontSize: "11px",
+                fontFamily: "'Tahoma', Arial, sans-serif",
+              }}
+            >
+              Cancel
+            </button>
+          </div>
 
-          {/* Tagline */}
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={inView ? { opacity: 1 } : {}}
-            transition={{ delay: STAGGER_ITEMS[4].delay, duration: 0.6, ease: "easeOut" }}
-            className="
-              font-ancient text-[11px] uppercase tracking-[0.3em]
-              text-silver-dim mt-2
-            "
+          {/* Tagline footnote */}
+          <p
+            style={{
+              marginTop: "12px",
+              textAlign: "center",
+              fontSize: "10px",
+              color: "#808080",
+              fontFamily: "'Tahoma', Arial, sans-serif",
+              textTransform: "uppercase",
+              letterSpacing: "0.15em",
+              fontStyle: "italic",
+            }}
           >
             Epopteia. Supreme Vision.
-          </motion.p>
-
+          </p>
         </div>
       </div>
     </section>

@@ -1,31 +1,13 @@
 import type { Metadata, Viewport } from "next"
-import { Cinzel, JetBrains_Mono } from "next/font/google"
 import "./globals.css"
 import StructuredData from "@/components/StructuredData"
-
-/* ── FONTS ───────────────────────────────────────────────────────────────── */
-const cinzel = Cinzel({
-  subsets:  ["latin"],
-  variable: "--font-ancient",
-  weight:   ["400", "500", "600", "700", "900"],
-  display:  "swap",
-  preload:  true,
-})
-
-const jetbrainsMono = JetBrains_Mono({
-  subsets:  ["latin"],
-  variable: "--font-modern",
-  weight:   ["300", "400", "500", "700"],
-  display:  "swap",
-  preload:  true,
-})
 
 /* ── VIEWPORT ────────────────────────────────────────────────────────────── */
 export const viewport: Viewport = {
   width:         "device-width",
   initialScale:  1,
   maximumScale:  5,
-  themeColor:    "#050505",
+  themeColor:    "#3a6ea5",
 }
 
 /* ── METADATA ────────────────────────────────────────────────────────────── */
@@ -109,29 +91,21 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${cinzel.variable} ${jetbrainsMono.variable} scroll-smooth`}
+      className="scroll-smooth"
     >
       <head>
         <link rel="icon"             href="/favicon.ico"        sizes="any" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-
-        {/* DNS prefetch for external resources */}
         <link rel="preconnect"  href="https://fonts.googleapis.com" />
         <link rel="preconnect"  href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://cal.com" />
       </head>
 
-      <body className="antialiased bg-obsidian text-alabaster">
+      <body className="bg-[#d4d0c8] text-black">
         {/* Skip-to-content: accessibility requirement */}
         <a
           href="#main-content"
-          className="
-            sr-only focus:not-sr-only
-            focus:fixed focus:top-4 focus:left-4 focus:z-[200]
-            focus:px-4 focus:py-2
-            focus:bg-silver focus:text-obsidian
-            focus:text-modern focus:text-xs focus:uppercase focus:tracking-widest
-          "
+          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[200] focus:px-4 focus:py-2 win-btn"
         >
           Skip to content
         </a>

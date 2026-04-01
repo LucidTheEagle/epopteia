@@ -1,11 +1,5 @@
 "use client"
 
-import { useRef } from "react"
-import { motion, useInView } from "framer-motion"
-
-/* ── CONSTANTS ───────────────────────────────────────────────────────────── */
-const PREMIUM_EASE: [number, number, number, number] = [0.16, 1, 0.3, 1]
-
 const LAWS = [
   {
     number: "Law I",
@@ -29,252 +23,336 @@ const LAWS = [
   },
 ] as const
 
-/* ── LAW CARD ────────────────────────────────────────────────────────────── */
-interface LawCardProps {
-  law:    (typeof LAWS)[number]
-  index:  number
-  inView: boolean
-}
-
-function LawCard({ law, index, inView }: LawCardProps) {
-  return (
-    <motion.article
-      aria-label={`${law.number} — ${law.title}`}
-      initial={{ opacity: 0, y: 16 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{
-        delay:    index * 0.1,
-        duration: 0.7,
-        ease:     PREMIUM_EASE,
-      }}
-      style={{ willChange: "opacity, transform" }}
-      className="
-        group relative
-        bg-obsidian
-        p-8 md:p-10
-        flex flex-col gap-4
-        overflow-hidden
-        transition-colors duration-300
-        hover:bg-basalt-lift
-      "
-    >
-      {/* Silver left accent bar — grows height on scroll enter */}
-      <motion.span
-        aria-hidden="true"
-        initial={{ height: "0%" }}
-        animate={inView ? { height: "100%" } : {}}
-        transition={{
-          delay:    index * 0.1 + 0.2,
-          duration: 0.6,
-          ease:     PREMIUM_EASE,
-        }}
-        style={{ willChange: "height" }}
-        className="
-          absolute top-0 left-0
-          w-[2px] bg-silver
-        "
-      />
-
-      {/* Law number */}
-      <span className="
-        font-modern text-[9px] uppercase tracking-[0.25em]
-        text-silver-dim
-      ">
-        {law.number}
-      </span>
-
-      {/* Law title */}
-      <h3 className="
-        font-ancient font-semibold
-        text-[clamp(13px,1.2vw,16px)]
-        tracking-[0.05em] leading-snug
-        text-silver
-      ">
-        {law.title}
-      </h3>
-
-      {/* Law body */}
-      <p className="
-        font-modern text-[12px] leading-[1.75]
-        text-granite
-      ">
-        {law.body}
-      </p>
-    </motion.article>
-  )
-}
-
-/* ── MAIN COMPONENT ──────────────────────────────────────────────────────── */
 export default function Identity() {
-  const topRef   = useRef<HTMLDivElement>(null)
-  const lawsRef  = useRef<HTMLDivElement>(null)
-
-  const topInView  = useInView(topRef,  { once: true, margin: "-80px" })
-  const lawsInView = useInView(lawsRef, { once: true, margin: "-60px" })
-
   return (
     <section
       id="identity"
       aria-labelledby="identity-heading"
-      className="relative w-full py-32 md:py-40 px-6 section-surface-alt geo-diagonal-overlay overflow-hidden"
+      style={{
+        background: "#3a6ea5",
+        padding: "0 16px 24px",
+        fontFamily: "'Tahoma', 'MS Sans Serif', Arial, sans-serif",
+      }}
     >
-      <div className="max-w-[1280px] mx-auto">
-
-        {/* ── SECTION LABEL ─────────────────────────────────────────────── */}
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={topInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6, ease: PREMIUM_EASE }}
-          style={{ willChange: "opacity, transform" }}
-          aria-hidden="true"
-          className="section-label mb-12"
-        >
-          What Epopteia Is
-        </motion.div>
-
-        {/* ── TOP BLOCK — 2-col: name left, mission right ───────────────── */}
-        <div
-          ref={topRef}
-          className="
-            grid grid-cols-1 md:grid-cols-2
-            gap-px
-          bg-border
-            mb-px
-          "
-        >
-          {/* LEFT — Name + etymology */}
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={topInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.8, ease: PREMIUM_EASE }}
-            style={{ willChange: "opacity, transform" }}
-            className="bg-obsidian p-10 md:p-14 flex flex-col gap-6"
-          >
-            {/* Greek tag */}
-            <span className="
-              font-modern text-[9px] uppercase tracking-[0.3em]
-              text-silver
-            ">
-              Ancient Greek · ἐποπτεία · eh-pop-TEY-ah
-            </span>
-
-            {/* Brand name */}
-            <h2
-              id="identity-heading"
-              className="
-                font-ancient font-black
-                text-[clamp(36px,5vw,64px)]
-                tracking-widest leading-none
-                text-alabaster
-              "
-            >
-              EPOPTEIA
-            </h2>
-
-            {/* Definition */}
-            <blockquote className="
-              border-l-2 border-silver-dim
-              pl-5
-              font-modern text-[13px] leading-[1.75]
-              text-granite
-              not-italic
-            ">
-              <p>
-                The final stage of initiation in ancient Greek mystery
-                traditions — the moment where the seeker moves from mystery
-                and confusion into{" "}
-                <span className="text-alabaster">direct revelation</span>{" "}
-                and absolute clarity.
-              </p>
-            </blockquote>
-
-            {/* Pronunciation footnote */}
-            <span className="
-              font-modern text-[10px] uppercase tracking-[0.15em]
-              text-silver-dim mt-2
-            ">
-              Supreme Vision.
-            </span>
-          </motion.div>
-
-          {/* RIGHT — Mission */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={topInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.8, ease: PREMIUM_EASE }}
-            style={{ willChange: "opacity, transform" }}
-            className="
-              bg-obsidian p-10 md:p-14
-              flex flex-col justify-center gap-8
-            "
-          >
-            <span className="
-              font-modern text-[9px] uppercase tracking-[0.3em]
-              text-silver
-            ">
-              — Mission
-            </span>
-
-            <p className="
-              font-ancient font-normal italic
-              text-[clamp(18px,2vw,26px)]
-              leading-[1.6] tracking-[0.03em]
-              text-alabaster
-            ">
-              To strip away the fog of complexity and architect clarity
-              through AI.
-            </p>
-
-            <div aria-hidden="true" className="w-10 h-px bg-silver-dim" />
-
-            <p className="
-              font-modern text-[13px] leading-[1.75]
-              text-granite
-              max-w-[400px]
-            ">
-              Technology is the servant. The goal is to free the human mind
-              for higher-order work. Every system built under Epopteia must
-              pass through the Seven Laws.
-            </p>
-          </motion.div>
+      <div className="win-window" style={{ maxWidth: "1280px", margin: "0 auto" }}>
+        {/* Title bar */}
+        <div className="win-titlebar" style={{ justifyContent: "space-between" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+            <span aria-hidden="true">ℹ</span>
+            <span id="identity-heading">About Epopteia — System Properties</span>
+          </div>
+          <div className="flex items-center gap-[2px]" aria-hidden="true">
+            <button className="win-titlebar-btn" style={{ fontSize: "7px" }}>_</button>
+            <button className="win-titlebar-btn" style={{ fontSize: "7px" }}>□</button>
+            <button className="win-titlebar-btn" style={{ fontSize: "7px", color: "#000" }}>✕</button>
+          </div>
         </div>
 
-        {/* ── LAWS GRID — 4-col hairline ────────────────────────────────── */}
+        {/* Tabs bar */}
         <div
-          ref={lawsRef}
-          role="list"
-          aria-label="The Seven Laws of the Epopteia OS — four shown"
-          className="
-            grid
-            grid-cols-1
-            sm:grid-cols-2
-            lg:grid-cols-4
-            gap-px
-            bg-border
-          "
+          style={{
+            background: "#d4d0c8",
+            borderBottom: "1px solid #808080",
+            display: "flex",
+            padding: "4px 8px 0",
+            gap: "2px",
+          }}
+          role="tablist"
         >
-          {LAWS.map((law, i) => (
-            <div key={law.number} role="listitem">
-              <LawCard law={law} index={i} inView={lawsInView} />
+          {["General", "Laws", "Mission", "Advanced"].map((tab, i) => (
+            <div
+              key={tab}
+              role="tab"
+              aria-selected={i === 0}
+              style={{
+                padding: "3px 12px 4px",
+                background: i === 0 ? "#d4d0c8" : "#bdb8b0",
+                border: "1px solid #808080",
+                borderBottom: i === 0 ? "1px solid #d4d0c8" : "1px solid #808080",
+                borderTopLeftRadius: "2px",
+                borderTopRightRadius: "2px",
+                marginBottom: i === 0 ? "-1px" : "0",
+                fontSize: "11px",
+                cursor: "default",
+                color: "#000",
+                position: "relative",
+                zIndex: i === 0 ? 1 : 0,
+              }}
+            >
+              {tab}
             </div>
           ))}
         </div>
 
-        {/* ── SEVEN LAWS NOTE ───────────────────────────────────────────── */}
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={lawsInView ? { opacity: 1 } : {}}
-          transition={{ delay: 0.6, duration: 0.6, ease: "easeOut" }}
-          className="
-            mt-6
-            font-modern text-[10px] uppercase tracking-[0.2em]
-            text-silver-dim
-            text-right
-          "
-        >
-          Four of Seven Laws shown.
-        </motion.p>
+        {/* Content area */}
+        <div style={{ background: "#d4d0c8", padding: "16px" }}>
+          {/* Two-column top */}
+          <div
+            style={{
+              display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+            gap: "8px",
+            marginBottom: "12px",
+            }}
+          >
+            {/* Left — Identity */}
+            <div
+              style={{
+                border: "1px solid",
+                borderColor: "#808080 #fff #fff #808080",
+                background: "#fff",
+                padding: "14px",
+              }}
+            >
+              <div
+                style={{
+                  fontSize: "10px",
+                  color: "#808080",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.15em",
+                  marginBottom: "8px",
+                  fontFamily: "'Tahoma', Arial, sans-serif",
+                }}
+              >
+                Ancient Greek · ἐποπτεία · eh-pop-TEY-ah
+              </div>
 
+              <h2
+                style={{
+                  fontSize: "clamp(20px, 4vw, 42px)",
+                  fontWeight: "bold",
+                  letterSpacing: "0.2em",
+                  color: "#0a246a",
+                  fontFamily: "'Tahoma', 'MS Sans Serif', Arial, sans-serif",
+                  marginBottom: "12px",
+                }}
+              >
+                EPOPTEIA
+              </h2>
+
+              {/* Definition in a sunken group box */}
+              <div
+                style={{
+                  background: "#f0f0f0",
+                  border: "1px solid",
+                  borderColor: "#808080 #fff #fff #808080",
+                  padding: "8px 10px",
+                  marginBottom: "10px",
+                }}
+              >
+                <p
+                  style={{
+                    fontSize: "11px",
+                    lineHeight: "1.65",
+                    color: "#000",
+                    fontFamily: "'Tahoma', Arial, sans-serif",
+                  }}
+                >
+                  The final stage of initiation in ancient Greek mystery
+                  traditions — the moment where the seeker moves from mystery
+                  and confusion into{" "}
+                  <strong style={{ color: "#000080" }}>direct revelation</strong>{" "}
+                  and absolute clarity.
+                </p>
+              </div>
+
+              <div
+                style={{
+                  fontSize: "10px",
+                  color: "#808080",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.1em",
+                  fontFamily: "'Tahoma', Arial, sans-serif",
+                }}
+              >
+                Supreme Vision.
+              </div>
+            </div>
+
+            {/* Right — Mission */}
+            <div
+              style={{
+                border: "1px solid",
+                borderColor: "#808080 #fff #fff #808080",
+                background: "#fff",
+                padding: "14px",
+                display: "flex",
+                flexDirection: "column",
+                gap: "10px",
+              }}
+            >
+              <div
+                style={{
+                  fontSize: "10px",
+                  color: "#808080",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.15em",
+                  fontFamily: "'Tahoma', Arial, sans-serif",
+                }}
+              >
+                — Mission Statement
+              </div>
+
+              <p
+                style={{
+                  fontSize: "13px",
+                  fontWeight: "bold",
+                  color: "#000080",
+                  fontFamily: "'Tahoma', Arial, sans-serif",
+                  lineHeight: "1.6",
+                  fontStyle: "italic",
+                }}
+              >
+                To strip away the fog of complexity and architect clarity through AI.
+              </p>
+
+              <hr style={{ border: "none", borderTop: "1px solid #808080", borderBottom: "1px solid #fff" }} />
+
+              <p
+                style={{
+                  fontSize: "11px",
+                  lineHeight: "1.7",
+                  color: "#444",
+                  fontFamily: "'Tahoma', Arial, sans-serif",
+                }}
+              >
+                Technology is the servant. The goal is to free the human mind
+                for higher-order work. Every system built under Epopteia must
+                pass through the Seven Laws.
+              </p>
+
+              {/* Property rows like Windows Properties dialog */}
+              <div style={{ marginTop: "auto" }}>
+                {[
+                  { label: "Founded:", value: "Clarity Architecture" },
+                  { label: "Version:", value: "Supreme Vision 1.0" },
+                  { label: "Status:", value: "Production" },
+                ].map((row) => (
+                  <div
+                    key={row.label}
+                    style={{
+                      display: "flex",
+                      gap: "8px",
+                      padding: "2px 0",
+                      borderBottom: "1px dotted #d4d0c8",
+                      fontSize: "11px",
+                      fontFamily: "'Tahoma', Arial, sans-serif",
+                    }}
+                  >
+                    <span style={{ color: "#808080", width: "70px", flexShrink: 0 }}>{row.label}</span>
+                    <span style={{ color: "#000" }}>{row.value}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* ── LAWS GRID ──────────────────────────────────────────────── */}
+          {/* Group box */}
+          <div
+            style={{
+              border: "1px solid #808080",
+              borderTop: "none",
+              padding: "12px 10px 10px",
+              position: "relative",
+              marginTop: "16px",
+            }}
+            role="list"
+            aria-label="The Seven Laws of the Epopteia OS — four shown"
+          >
+            <span
+              style={{
+                position: "absolute",
+                top: "-8px",
+                left: "8px",
+                background: "#d4d0c8",
+                padding: "0 4px",
+                fontSize: "11px",
+                fontFamily: "'Tahoma', Arial, sans-serif",
+                color: "#000",
+              }}
+            >
+              The Seven Laws (4 of 7 shown)
+            </span>
+
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+                gap: "8px",
+              }}
+            >
+              {LAWS.map((law) => (
+                <div
+                  key={law.number}
+                  role="listitem"
+                  style={{
+                    background: "#fff",
+                    border: "1px solid",
+                    borderColor: "#808080 #fff #fff #808080",
+                    padding: "10px",
+                  }}
+                >
+                  <div
+                    style={{
+                      fontSize: "10px",
+                      color: "#808080",
+                      textTransform: "uppercase",
+                      letterSpacing: "0.1em",
+                      marginBottom: "4px",
+                      fontFamily: "'Tahoma', Arial, sans-serif",
+                    }}
+                  >
+                    {law.number}
+                  </div>
+                  <h3
+                    style={{
+                      fontSize: "11px",
+                      fontWeight: "bold",
+                      color: "#000080",
+                      fontFamily: "'Tahoma', Arial, sans-serif",
+                      marginBottom: "6px",
+                    }}
+                  >
+                    {law.title}
+                  </h3>
+                  <p
+                    style={{
+                      fontSize: "11px",
+                      lineHeight: "1.55",
+                      color: "#444",
+                      fontFamily: "'Tahoma', Arial, sans-serif",
+                    }}
+                  >
+                    {law.body}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* OK / Cancel buttons */}
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "flex-end",
+              gap: "6px",
+              marginTop: "14px",
+              paddingTop: "10px",
+              borderTop: "1px solid #808080",
+            }}
+          >
+            <button className="win-btn win-btn-default" style={{ fontFamily: "'Tahoma', Arial, sans-serif", fontSize: "11px" }}>
+              OK
+            </button>
+            <button className="win-btn" style={{ fontFamily: "'Tahoma', Arial, sans-serif", fontSize: "11px" }}>
+              Cancel
+            </button>
+            <button className="win-btn" style={{ fontFamily: "'Tahoma', Arial, sans-serif", fontSize: "11px" }}>
+              Apply
+            </button>
+          </div>
+        </div>
       </div>
     </section>
   )
