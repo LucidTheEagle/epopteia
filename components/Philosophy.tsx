@@ -1,244 +1,267 @@
 "use client"
 
-import { useRef } from "react"
-import { motion, useInView } from "framer-motion"
-import { TracingBeam } from "./ui/tracing-beam"
-
-/* ── CONSTANTS ───────────────────────────────────────────────────────────── */
-const PREMIUM_EASE: [number, number, number, number] = [0.16, 1, 0.3, 1]
-
-/* Quote broken into paragraphs — each staggers in independently */
 const QUOTE_PARAGRAPHS = [
-  {
-    id:     "p1",
-    text:   "Most solutions treat the symptom.",
-    accent: false,
-  },
-  {
-    id:     "p2",
-    text:   "We climb above the problem first.",
-    accent: true,
-  },
-  {
-    id:     "p3",
-    text:   "From altitude, the root cause is always visible. The system we build targets that —",
-    accent: false,
-  },
-  {
-    id:     "p4",
-    text:   "nothing else.",
-    accent: true,
-  },
+  { id: "p1", text: "Most solutions treat the symptom.",                                                         accent: false },
+  { id: "p2", text: "We climb above the problem first.",                                                         accent: true  },
+  { id: "p3", text: "From altitude, the root cause is always visible. The system we build targets that —",       accent: false },
+  { id: "p4", text: "nothing else.",                                                                             accent: true  },
 ] as const
 
-/* ── QUOTE PARAGRAPH ─────────────────────────────────────────────────────── */
-interface QuoteParagraphProps {
-  paragraph: (typeof QUOTE_PARAGRAPHS)[number]
-  index:     number
-  inView:    boolean
-}
-
-function QuoteParagraph({ paragraph, index, inView }: QuoteParagraphProps) {
-  return (
-    <motion.p
-      initial={{ opacity: 0, y: 12 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{
-        delay:    index * 0.2 + 0.1,
-        duration: 0.7,
-        ease:     PREMIUM_EASE,
-      }}
-      style={{ willChange: "opacity, transform" }}
-      className={`
-        font-ancient font-normal italic
-        text-[clamp(18px,2.2vw,28px)]
-        leading-[1.65] tracking-[0.03em]
-        ${paragraph.accent ? "text-alabaster" : "text-granite"}
-      `}
-    >
-      {paragraph.text}
-    </motion.p>
-  )
-}
-
-/* ── MAIN COMPONENT ──────────────────────────────────────────────────────── */
 export default function Philosophy() {
-  const sectionRef = useRef<HTMLElement>(null)
-  const leftRef    = useRef<HTMLDivElement>(null)
-  const rightRef   = useRef<HTMLDivElement>(null)
-
-  const leftInView  = useInView(leftRef,  { once: true, margin: "-80px" })
-  const rightInView = useInView(rightRef, { once: true, margin: "-60px" })
-
   return (
     <section
       id="philosophy"
-      ref={sectionRef}
       aria-labelledby="philosophy-heading"
-      className="relative w-full py-32 md:py-40 px-6 section-surface-alt overflow-hidden"
+      style={{
+        background: "#3a6ea5",
+        padding: "0 16px 24px",
+        fontFamily: "'Tahoma', 'MS Sans Serif', Arial, sans-serif",
+      }}
     >
-      <div className="max-w-[1280px] mx-auto">
+      <div className="win-window" style={{ maxWidth: "1280px", margin: "0 auto" }}>
+        {/* Title bar */}
+        <div className="win-titlebar" style={{ justifyContent: "space-between" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+            <span aria-hidden="true">📋</span>
+            <span id="philosophy-heading">Notepad — Philosophy.txt</span>
+          </div>
+          <div className="flex items-center gap-[2px]" aria-hidden="true">
+            <button className="win-titlebar-btn" style={{ fontSize: "7px" }}>_</button>
+            <button className="win-titlebar-btn" style={{ fontSize: "7px" }}>□</button>
+            <button className="win-titlebar-btn" style={{ fontSize: "7px", color: "#000" }}>✕</button>
+          </div>
+        </div>
 
-        {/* ── SECTION LABEL ─────────────────────────────────────────────── */}
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={leftInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6, ease: PREMIUM_EASE }}
-          style={{ willChange: "opacity, transform" }}
-          aria-hidden="true"
-          className="section-label mb-12"
-        >
-          Philosophy
-        </motion.div>
-
-        {/* ── TWO-COLUMN GRID ───────────────────────────────────────────── */}
+        {/* Notepad menu */}
         <div
-          className="
-            grid grid-cols-1 md:grid-cols-[1fr_2fr]
-            gap-px
-            bg-border
-          "
+          style={{
+            background: "#d4d0c8",
+            borderBottom: "1px solid #808080",
+            padding: "1px 2px",
+            display: "flex",
+          }}
         >
-
-          {/* ── LEFT — Law label + heading + descriptor ───────────────── */}
-          <motion.div
-            ref={leftRef}
-            initial={{ opacity: 0, x: -16 }}
-            animate={leftInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.8, ease: PREMIUM_EASE }}
-            style={{ willChange: "opacity, transform" }}
-            className="bg-obsidian p-10 md:p-14 flex flex-col gap-6"
-          >
-            {/* Law tag */}
-            <span className="
-              font-modern text-[9px] uppercase tracking-[0.3em]
-              text-silver
-            ">
-              — The Seven Laws · Law I
+          {["File", "Edit", "Format", "View", "Help"].map((item) => (
+            <span
+              key={item}
+              style={{
+                fontSize: "11px",
+                padding: "2px 6px",
+                cursor: "default",
+                fontFamily: "'Tahoma', Arial, sans-serif",
+                color: "#000",
+              }}
+            >
+              {item}
             </span>
+          ))}
+        </div>
 
-            {/* Law heading */}
+        {/* Content area */}
+        <div
+          style={{
+            background: "#d4d0c8",
+            padding: "12px",
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+            gap: "8px",
+          }}
+        >
+          {/* Left — Law card */}
+          <div
+            style={{
+              border: "1px solid",
+              borderColor: "#808080 #fff #fff #808080",
+              background: "#fff",
+              padding: "16px",
+              display: "flex",
+              flexDirection: "column",
+              gap: "10px",
+            }}
+          >
+            <div
+              style={{
+                fontSize: "10px",
+                color: "#808080",
+                textTransform: "uppercase",
+                letterSpacing: "0.2em",
+                fontFamily: "'Tahoma', Arial, sans-serif",
+              }}
+            >
+              — The Seven Laws · Law I
+            </div>
+
             <h2
-              id="philosophy-heading"
-              className="
-                font-ancient font-bold
-                text-[clamp(28px,3vw,42px)]
-                tracking-[0.05em] leading-[1.15]
-                text-alabaster
-              "
+              style={{
+                fontSize: "clamp(16px, 2.5vw, 28px)",
+                fontWeight: "bold",
+                color: "#0a246a",
+                fontFamily: "'Tahoma', Arial, sans-serif",
+                lineHeight: "1.2",
+              }}
             >
               The Law<br />of Altitude
             </h2>
 
-            {/* Silver rule */}
+            <hr style={{ border: "none", borderTop: "1px solid #808080", borderBottom: "1px solid #fff", width: "40px" }} />
+
             <div
-              aria-hidden="true"
-              className="w-8 h-px bg-silver"
-            />
+              style={{
+                background: "#f0f0f0",
+                border: "1px solid",
+                borderColor: "#808080 #fff #fff #808080",
+                padding: "8px",
+              }}
+            >
+              <p
+                style={{
+                  fontSize: "11px",
+                  lineHeight: "1.7",
+                  color: "#444",
+                  fontFamily: "'Tahoma', Arial, sans-serif",
+                }}
+              >
+                The system must solve the root cause, not the symptom.
+                We look from above. From altitude, the answer is
+                always visible.
+              </p>
+            </div>
 
-            {/* Descriptor */}
-            <p className="
-              font-modern text-[12px] leading-[1.8]
-              text-granite
-              max-w-[280px]
-            ">
-              The system must solve the root cause, not the symptom.
-              We look from above. From altitude, the answer is
-              always visible.
-            </p>
-
-            {/* Law number — large decorative */}
-            <span
+            {/* Law Roman numeral — like a watermark */}
+            <div
+              style={{
+                textAlign: "right",
+                fontSize: "48px",
+                fontWeight: "bold",
+                color: "#e0ddd5",
+                fontFamily: "'Tahoma', Arial, sans-serif",
+                lineHeight: 1,
+                marginTop: "auto",
+                userSelect: "none",
+              }}
               aria-hidden="true"
-              className="
-                font-ancient font-black
-                text-[80px] leading-none tracking-tight
-                text-[rgba(192,192,192,0.04)]
-                mt-auto select-none
-              "
             >
               I
-            </span>
-          </motion.div>
-
-          {/* ── RIGHT — TracingBeam wraps the expanded quote ──────────── */}
-          <div
-            ref={rightRef}
-            className="bg-obsidian p-10 md:p-14 md:pl-16"
-          >
-            <TracingBeam className="max-w-none">
-              <div
-                className="flex flex-col gap-8"
-                role="blockquote"
-                aria-label="The Law of Altitude — expanded"
-              >
-                {/* Opening mark */}
-                <motion.span
-                  initial={{ opacity: 0 }}
-                  animate={rightInView ? { opacity: 1 } : {}}
-                  transition={{ duration: 0.5, ease: "easeOut" }}
-                  aria-hidden="true"
-                  className="
-                    font-ancient text-[64px] leading-none
-                    text-silver-dim
-                    select-none -mb-4
-                  "
-                >
-                  &quot;
-                </motion.span>
-
-                {/* Staggered quote paragraphs */}
-                {QUOTE_PARAGRAPHS.map((para, i) => (
-                  <QuoteParagraph
-                    key={para.id}
-                    paragraph={para}
-                    index={i}
-                    inView={rightInView}
-                  />
-                ))}
-
-                {/* Closing attribution */}
-                <motion.div
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={rightInView ? { opacity: 1, y: 0 } : {}}
-                  transition={{
-                    delay:    QUOTE_PARAGRAPHS.length * 0.2 + 0.3,
-                    duration: 0.6,
-                    ease:     PREMIUM_EASE,
-                  }}
-                  style={{ willChange: "opacity, transform" }}
-                  className="
-                    pt-8 mt-4
-                    border-t border-border
-                    flex flex-col gap-2
-                  "
-                >
-                  <span className="
-                    font-modern text-[9px] uppercase tracking-[0.3em]
-                    text-silver
-                  ">
-                    — Epopteia · The Seven Laws
-                  </span>
-                  <p className="
-                    font-modern text-[11px] leading-[1.7]
-                    text-granite
-                    max-w-[420px]
-                  ">
-                    Every system built under Epopteia is held to this law
-                    before any other. Root cause first. Always.
-                  </p>
-                </motion.div>
-
-              </div>
-            </TracingBeam>
+            </div>
           </div>
 
+          {/* Right — Notepad-style text area with the quote */}
+          <div
+            style={{
+              border: "1px solid",
+              borderColor: "#808080 #fff #fff #808080",
+              background: "#fff",
+              display: "flex",
+              flexDirection: "column",
+            }}
+          >
+            {/* Ruler bar like Notepad */}
+            <div
+              aria-hidden="true"
+              style={{
+                borderBottom: "1px solid #d4d0c8",
+                padding: "2px 8px",
+                fontSize: "9px",
+                fontFamily: "Courier New, monospace",
+                color: "#808080",
+                background: "#f8f8f8",
+                letterSpacing: "0.5em",
+                userSelect: "none",
+              }}
+            >
+              |....10....|....20....|....30....|....40....|....50....|....60....|
+            </div>
+
+            {/* Text body */}
+            <div
+              style={{
+                padding: "16px 20px",
+                flex: 1,
+                fontFamily: "Courier New, monospace",
+                fontSize: "13px",
+                lineHeight: "1.8",
+                color: "#000",
+                overflowY: "auto",
+              }}
+              role="blockquote"
+              aria-label="The Law of Altitude — expanded"
+            >
+              {/* Opening quote mark */}
+              <span
+                aria-hidden="true"
+                style={{
+                  fontSize: "40px",
+                  lineHeight: 1,
+                  color: "#808080",
+                  display: "block",
+                  marginBottom: "4px",
+                  fontFamily: "'Tahoma', Arial, sans-serif",
+                }}
+              >
+                &quot;
+              </span>
+
+              {QUOTE_PARAGRAPHS.map((para) => (
+                <p
+                  key={para.id}
+                  style={{
+                    marginBottom: "12px",
+                    color: para.accent ? "#000080" : "#444",
+                    fontWeight: para.accent ? "bold" : "normal",
+                    fontStyle: "italic",
+                    fontSize: para.accent ? "14px" : "13px",
+                  }}
+                >
+                  {para.text}
+                </p>
+              ))}
+
+              {/* Attribution */}
+              <div
+                style={{
+                  marginTop: "20px",
+                  paddingTop: "10px",
+                  borderTop: "1px dashed #808080",
+                }}
+              >
+                <p
+                  style={{
+                    fontSize: "10px",
+                    color: "#808080",
+                    textTransform: "uppercase",
+                    letterSpacing: "0.15em",
+                    fontFamily: "'Tahoma', Arial, sans-serif",
+                    marginBottom: "4px",
+                  }}
+                >
+                  — Epopteia · The Seven Laws
+                </p>
+                <p
+                  style={{
+                    fontSize: "11px",
+                    color: "#555",
+                    fontFamily: "'Tahoma', Arial, sans-serif",
+                    lineHeight: "1.6",
+                  }}
+                >
+                  Every system built under Epopteia is held to this law
+                  before any other. Root cause first. Always.
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
 
-        {/* ── MOBILE FALLBACK NOTE — TracingBeam left border ──────────── */}
-        {/*    TracingBeam's absolute-positioned SVG uses -left-4 md:-left-20  */}
-        {/*    On mobile this collapses — the section reads cleanly as prose   */}
-
+        {/* Status bar — Notepad style */}
+        <div
+          className="win-statusbar"
+          style={{ justifyContent: "flex-end" }}
+        >
+          <span className="win-statusbar-panel">Ln 1, Col 1</span>
+          <span className="win-statusbar-panel">100%</span>
+          <span className="win-statusbar-panel">Windows (CRLF)</span>
+          <span className="win-statusbar-panel">UTF-8</span>
+        </div>
       </div>
     </section>
   )

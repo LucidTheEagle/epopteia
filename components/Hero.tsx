@@ -1,299 +1,285 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react"
-import { motion, useReducedMotion } from "framer-motion"
-import { Spotlight }          from "./ui/spotlight"
-import { TextGenerateEffect } from "./ui/text-generate-effect"
-
-/* ── CONSTANTS ───────────────────────────────────────────────────────────── */
-const PREMIUM_EASE: [number, number, number, number] = [0.16, 1, 0.3, 1]
-
-const DECLARATION =
-  "You are not confused. You are operating without clarity. " +
-  "There is a difference. One is permanent. The other is solvable."
-
-const BRAND_LETTERS = "EPOPTEIA".split("")
-
 const CAL_LINK = "https://cal.com/lucid-theeagle-ebabkz/begin-the-ascent"
 
-/* ── SACRED GEOMETRY SVG ─────────────────────────────────────────────────── */
-function GeometryRings() {
+/* ── WIN2K TITLE BAR CONTROLS ────────────────────────────────────────────── */
+function TitleBarControls() {
   return (
-    <div aria-hidden="true" className="absolute inset-0 pointer-events-none overflow-hidden">
-      {/* Outer ring */}
-      <div
-        className="animate-geo-rotate absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
-        style={{ width: "min(900px,140vw)", height: "min(900px,140vw)" }}
-      >
-        <svg viewBox="0 0 900 900" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full opacity-[0.04]">
-          <circle cx="450" cy="450" r="448" stroke="#C0C0C0" strokeWidth="0.5" />
-          <circle cx="450" cy="450" r="320" stroke="#C0C0C0" strokeWidth="0.5" />
-          <line x1="450" y1="2"   x2="450" y2="898" stroke="#C0C0C0" strokeWidth="0.3" />
-          <line x1="2"   y1="450" x2="898" y2="450" stroke="#C0C0C0" strokeWidth="0.3" />
-          <line x1="127" y1="127" x2="773" y2="773" stroke="#C0C0C0" strokeWidth="0.3" />
-          <line x1="773" y1="127" x2="127" y2="773" stroke="#C0C0C0" strokeWidth="0.3" />
-          <polygon points="450,2 840,226 840,674 450,898 60,674 60,226"   stroke="#C0C0C0" strokeWidth="0.3" fill="none" />
-          <polygon points="450,130 750,300 750,600 450,770 150,600 150,300" stroke="#C0C0C0" strokeWidth="0.3" fill="none" />
-        </svg>
-      </div>
-
-      {/* Inner ring — counter-rotates */}
-      <div
-        className="animate-geo-rotate-reverse absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
-        style={{ width: "min(500px,80vw)", height: "min(500px,80vw)" }}
-      >
-        <svg viewBox="0 0 500 500" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full opacity-[0.03]">
-          <circle cx="250" cy="250" r="248" stroke="#C0C0C0" strokeWidth="0.5" />
-          <circle cx="250" cy="250" r="160" stroke="#C0C0C0" strokeWidth="0.5" />
-          <line x1="250" y1="2"   x2="250" y2="498" stroke="#C0C0C0" strokeWidth="0.4" />
-          <line x1="2"   y1="250" x2="498" y2="250" stroke="#C0C0C0" strokeWidth="0.4" />
-          <polygon points="250,2 498,126 498,374 250,498 2,374 2,126" stroke="#C0C0C0" strokeWidth="0.4" fill="none" />
-          <ellipse cx="250" cy="250" rx="40" ry="20" stroke="#C0C0C0" strokeWidth="0.5" fill="none" />
-          <circle  cx="250" cy="250" r="8"  stroke="#C0C0C0" strokeWidth="0.5" fill="none" />
-          <circle  cx="250" cy="250" r="2"  fill="#C0C0C0" opacity="0.4" />
-        </svg>
-      </div>
-
-      {/* Radial silver glow */}
-      <div
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none"
-        style={{
-          width:      "600px",
-          height:     "600px",
-          background: "radial-gradient(circle, rgba(192,192,192,0.04) 0%, transparent 70%)",
-        }}
-      />
-    </div>
-  )
-}
-
-/* ── BRAND NAME WITH LETTER STAGGER ──────────────────────────────────────── */
-function BrandName({ startDelay }: { startDelay: number }) {
-  return (
-    <div aria-label="Epopteia" className="flex items-center justify-center">
-      {BRAND_LETTERS.map((letter, i) => (
-        <motion.span
-          key={`${letter}-${i}`}
-          aria-hidden="true"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{
-            delay:    startDelay + i * 0.08,
-            duration: 0.5,
-            ease:     PREMIUM_EASE,
-          }}
-          style={{ willChange: "opacity" }}
-          className="
-            font-ancient font-black
-            text-[clamp(52px,9vw,112px)]
-            tracking-[0.12em] leading-none
-            text-alabaster
-          "
-        >
-          {letter}
-        </motion.span>
-      ))}
-    </div>
-  )
-}
-
-/* ── SCROLL INDICATOR ────────────────────────────────────────────────────── */
-function ScrollIndicator({ delay }: { delay: number }) {
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ delay, duration: 0.6, ease: "easeOut" }}
-      aria-hidden="true"
-      className="flex flex-col items-center gap-3 mt-16"
-    >
-      <div className="animate-scroll-pulse w-px h-8 bg-gradient-to-b from-transparent to-granite" />
-      <span className="font-modern text-[10px] uppercase tracking-[0.2em] text-granite">
-        Descend
-      </span>
-    </motion.div>
-  )
-}
-
-/* ── CTA BUTTON ──────────────────────────────────────────────────────────── */
-function HeroCTA({ delay, onClick }: { delay: number; onClick: () => void }) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 16 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay, duration: 0.7, ease: PREMIUM_EASE }}
-      style={{ willChange: "opacity, transform" }}
-      className="flex flex-col items-center gap-6"
-    >
+    <div className="flex items-center gap-[2px]" aria-hidden="true">
       <button
-        onClick={onClick}
-        aria-label="Begin the Ascent — start your clarity session"
-        className="
-          relative overflow-hidden
-          font-modern text-[11px] uppercase tracking-[0.2em]
-          px-10 py-4
-          text-obsidian bg-silver
-          border border-silver
-          transition-transform duration-200 hover:-translate-y-[2px]
-          focus-visible:outline-none focus-visible:ring-1
-          focus-visible:ring-silver focus-visible:ring-offset-2
-          focus-visible:ring-offset-obsidian
-          group touch-manipulation
-        "
+        className="win-titlebar-btn"
+        title="Minimize"
+        style={{ fontSize: "7px", fontFamily: "Marlett, Arial" }}
       >
-        <span
-          aria-hidden="true"
-          className="
-            absolute inset-0 bg-alabaster
-            -translate-x-full transition-transform duration-300
-            group-hover:translate-x-0
-          "
-          style={{ transitionTimingFunction: "cubic-bezier(0.16,1,0.3,1)" }}
-        />
-        <span className="relative z-10">Begin the Ascent</span>
+        _
       </button>
-    </motion.div>
+      <button
+        className="win-titlebar-btn"
+        title="Maximize"
+        style={{ fontSize: "7px", fontFamily: "Marlett, Arial" }}
+      >
+        □
+      </button>
+      <button
+        className="win-titlebar-btn"
+        title="Close"
+        style={{ fontSize: "7px", fontFamily: "Marlett, Arial", color: "#000" }}
+      >
+        ✕
+      </button>
+    </div>
   )
 }
 
 /* ── MAIN COMPONENT ──────────────────────────────────────────────────────── */
 export default function Hero() {
-  const [isMobile, setIsMobile] = useState(false)
-  const prefersReduced          = useReducedMotion()
-  const rafRef                  = useRef<number>(0)
-
-  /*
-   * Mobile detection only — no hasHydrated gate.
-   *
-   * The original code wrapped TextGenerateEffect in a hasHydrated check.
-   * This caused the animation to fire twice:
-   *   1. On mount — SSR fallback renders
-   *   2. When hasHydrated flips true — TextGenerateEffect mounts fresh
-   *      and its useAnimate fires again from scratch
-   *
-   * Fix: render TextGenerateEffect unconditionally on the client.
-   * The SSR fallback <p> only needs to guard against CLS on first paint —
-   * it does not need to persist until hydration. Remove the gate entirely
-   * and let TextGenerateEffect animate exactly once on mount.
-   */
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768)
-    checkMobile()
-
-    const handleResize = () => {
-      cancelAnimationFrame(rafRef.current)
-      rafRef.current = requestAnimationFrame(checkMobile)
-    }
-
-    window.addEventListener("resize", handleResize, { passive: true })
-    return () => {
-      cancelAnimationFrame(rafRef.current)
-      window.removeEventListener("resize", handleResize)
-    }
-  }, [])
-
   const openCalLink = () => {
     window.open(CAL_LINK, "_blank", "noopener,noreferrer")
   }
-
-  const t = (base: number) => (prefersReduced ? 0 : base)
-
-  const letterStaggerStart = isMobile ? 1.2 : 2.0
 
   return (
     <section
       id="hero"
       aria-label="Hero — Epopteia clarity architecture"
-      className="
-        relative min-h-screen w-full
-        flex flex-col items-center justify-center
-        overflow-hidden px-6
-        pt-[72px]
-      "
+      style={{
+        paddingTop: "46px", /* offset nav height (22px + 24px) */
+        minHeight: "100vh",
+        background: "#3a6ea5",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "70px 16px 16px",
+        fontFamily: "'Tahoma', 'MS Sans Serif', Arial, sans-serif",
+      }}
     >
-      {/* ── BACKGROUND ─────────────────────────────────────────────────── */}
-      <GeometryRings />
-
-      {/* Spotlight — suppressed on mobile for performance */}
-      {!isMobile && (
-        <>
-          <Spotlight
-            className="-top-40 left-0 md:left-60 md:-top-20"
-            fill="rgba(192,192,192,0.12)"
-          />
-          <Spotlight
-            className="-top-40 right-0 md:right-60 md:-top-20"
-            fill="rgba(192,192,192,0.06)"
-          />
-        </>
-      )}
-
-      {/* ── CONTENT ────────────────────────────────────────────────────── */}
-      <div className="
-        relative z-10 w-full
-        max-w-[800px] mx-auto
-        text-center
-        flex flex-col items-center
-      ">
-
-        {/* Eyebrow */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: t(0.2), duration: 0.7, ease: PREMIUM_EASE }}
-          style={{ willChange: "opacity, transform" }}
-          className="font-modern text-[10px] uppercase tracking-[0.35em] text-silver mb-12"
-          aria-hidden="true"
-        >
-          — Clarity Architecture
-        </motion.div>
-
-        {/* Declaration — no hasHydrated gate, animates exactly once */}
-        <div className="mb-12 md:mb-16 max-w-[680px]">
-          <TextGenerateEffect
-            words={DECLARATION}
-            className="
-              font-ancient font-normal
-              text-[clamp(18px,2.8vw,32px)]
-              leading-[1.55] tracking-[0.03em]
-              text-alabaster
-            "
-            filter={!isMobile && !prefersReduced}
-            duration={isMobile ? 0.3 : 0.7}
-          />
+      {/* ── MAIN WINDOW ──────────────────────────────────────────────── */}
+      <div
+        className="win-window"
+        style={{
+          width: "100%",
+          maxWidth: "800px",
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
+        {/* Title Bar */}
+        <div className="win-titlebar" style={{ justifyContent: "space-between" }}>
+          <div className="flex items-center gap-2">
+            {/* App icon */}
+            <div
+              style={{
+                width: "14px",
+                height: "14px",
+                background: "linear-gradient(135deg, #fff 30%, #a6caf0 100%)",
+                border: "1px solid rgba(255,255,255,0.3)",
+                flexShrink: 0,
+              }}
+            />
+            <span>Epopteia — Clarity Architecture &amp; AI Systems</span>
+          </div>
+          <TitleBarControls />
         </div>
 
-        {/* Brand name — letter stagger */}
-        <BrandName startDelay={t(letterStaggerStart)} />
-
-        {/* Subline */}
-        <motion.p
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{
-            delay:    t(letterStaggerStart + BRAND_LETTERS.length * 0.08 + 0.2),
-            duration: 0.7,
-            ease:     PREMIUM_EASE,
+        {/* Menu bar */}
+        <div
+          style={{
+            background: "#d4d0c8",
+            borderBottom: "1px solid #808080",
+            display: "flex",
+            gap: 0,
+            padding: "1px 2px",
           }}
-          style={{ willChange: "opacity, transform" }}
-          className="
-            font-modern text-[13px] uppercase tracking-[0.3em]
-            text-granite mt-4 mb-12
-          "
         >
-          We architect the ascent.
-        </motion.p>
+          {["File", "Edit", "View", "Clarity", "Help"].map((item) => (
+            <span
+              key={item}
+              style={{
+                fontSize: "11px",
+                padding: "2px 6px",
+                cursor: "default",
+                fontFamily: "'Tahoma', Arial, sans-serif",
+                color: "#000",
+              }}
+            >
+              {item}
+            </span>
+          ))}
+        </div>
 
-        {/* CTA */}
-        <HeroCTA
-          delay={t(letterStaggerStart + BRAND_LETTERS.length * 0.08 + 0.5)}
-          onClick={openCalLink}
-        />
+        {/* Window body */}
+        <div style={{ padding: "24px 28px 20px", background: "#d4d0c8" }}>
 
-        {/* Scroll indicator */}
-        <ScrollIndicator
-          delay={t(letterStaggerStart + BRAND_LETTERS.length * 0.08 + 1.0)}
-        />
+          {/* ── DECLARATION AREA — like a "document" with sunken inset */}
+          <div
+            style={{
+              background: "#fff",
+              border: "1px solid",
+              borderColor: "#808080 #fff #fff #808080",
+              padding: "20px 24px",
+              marginBottom: "20px",
+            }}
+          >
+            {/* Eyebrow label */}
+            <p
+              style={{
+                fontSize: "10px",
+                color: "#808080",
+                marginBottom: "12px",
+                letterSpacing: "0.1em",
+                textTransform: "uppercase",
+                fontFamily: "'Tahoma', Arial, sans-serif",
+              }}
+            >
+              [  CLARITY ARCHITECTURE  —  DIAGNOSTIC NOTICE  ]
+            </p>
+
+            {/* Declaration text */}
+            <p
+              style={{
+                fontSize: "16px",
+                fontWeight: "bold",
+                color: "#000080",
+                fontFamily: "'Tahoma', Arial, sans-serif",
+                lineHeight: "1.6",
+                marginBottom: "16px",
+              }}
+            >
+              You are not confused. You are operating without clarity.
+              <br />
+              There is a difference. One is permanent. The other is solvable.
+            </p>
+
+            {/* Brand */}
+            <div
+              style={{
+                borderTop: "1px solid #808080",
+                borderBottom: "1px solid #fff",
+                padding: "12px 0",
+                marginBottom: "12px",
+              }}
+            >
+              <h1
+                style={{
+                  fontSize: "clamp(28px, 6vw, 64px)",
+                  fontWeight: "bold",
+                  letterSpacing: "0.18em",
+                  color: "#0a246a",
+                  fontFamily: "'Tahoma', 'MS Sans Serif', Arial, sans-serif",
+                  lineHeight: 1,
+                  textAlign: "center",
+                }}
+              >
+                EPOPTEIA
+              </h1>
+              <p
+                style={{
+                  fontSize: "11px",
+                  color: "#808080",
+                  textAlign: "center",
+                  marginTop: "6px",
+                  fontFamily: "'Tahoma', Arial, sans-serif",
+                  letterSpacing: "0.2em",
+                  textTransform: "uppercase",
+                }}
+              >
+                We architect the ascent.
+              </p>
+            </div>
+          </div>
+
+          {/* ── STATUS LINE ────────────────────────────────────────────── */}
+          <div
+            style={{
+              background: "#d4d0c8",
+              border: "1px solid",
+              borderColor: "#808080 #fff #fff #808080",
+              padding: "6px 10px",
+              marginBottom: "16px",
+              display: "flex",
+              alignItems: "center",
+              gap: "8px",
+            }}
+          >
+            <div
+              style={{
+                width: "10px",
+                height: "10px",
+                background: "#008000",
+                border: "1px solid #808080",
+                flexShrink: 0,
+              }}
+              aria-hidden="true"
+            />
+            <span
+              style={{
+                fontSize: "11px",
+                fontFamily: "'Tahoma', Arial, sans-serif",
+                color: "#000",
+              }}
+            >
+              System Status: <strong>Clarity architecture available.</strong> — 3 systems in production.
+            </span>
+          </div>
+
+          {/* ── BUTTON ROW ─────────────────────────────────────────────── */}
+          <div
+            style={{
+              display: "flex",
+              gap: "8px",
+              justifyContent: "center",
+              alignItems: "center",
+              flexWrap: "wrap",
+            }}
+          >
+            <button
+              onClick={openCalLink}
+              className="win-btn win-btn-default"
+              aria-label="Begin the Ascent — start your clarity session"
+              style={{
+                fontSize: "11px",
+                padding: "5px 24px",
+                fontFamily: "'Tahoma', Arial, sans-serif",
+                fontWeight: "bold",
+              }}
+            >
+              Begin the Ascent
+            </button>
+            <button
+              onClick={() =>
+                document.getElementById("work")?.scrollIntoView({ behavior: "smooth" })
+              }
+              className="win-btn"
+              style={{
+                fontSize: "11px",
+                padding: "5px 20px",
+                fontFamily: "'Tahoma', Arial, sans-serif",
+              }}
+            >
+              View Systems
+            </button>
+            <button
+              onClick={() =>
+                document.getElementById("philosophy")?.scrollIntoView({ behavior: "smooth" })
+              }
+              className="win-btn"
+              style={{
+                fontSize: "11px",
+                padding: "5px 20px",
+                fontFamily: "'Tahoma', Arial, sans-serif",
+              }}
+            >
+              Philosophy
+            </button>
+          </div>
+
+        </div>
+
+        {/* Status bar */}
+        <div className="win-statusbar" style={{ justifyContent: "space-between" }}>
+          <span className="win-statusbar-panel">Ready</span>
+          <span className="win-statusbar-panel">Clarity Mode: ON</span>
+          <span className="win-statusbar-panel">eh-pop-TEY-ah</span>
+        </div>
       </div>
     </section>
   )

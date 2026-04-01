@@ -2,21 +2,45 @@
 
 @theme {
   /* ── TYPOGRAPHY ─────────────────────────────────────────────────────────── */
-  --font-family-ancient: var(--font-ancient); /* Cinzel — authority          */
-  --font-family-modern:  var(--font-modern);  /* JetBrains Mono — precision  */
+  --font-family-sans:   'Tahoma', 'MS Sans Serif', Arial, sans-serif;
+  --font-family-mono:   'Courier New', Courier, monospace;
 
-  /* ── CORE PALETTE — Epopteia Design System ──────────────────────────────── */
-  --color-obsidian:    #050505; /* Page background                            */
-  --color-basalt:      #111111; /* Card / surface background                  */
-  --color-basalt-lift: #161616; /* Card hover background                      */
-  --color-alabaster:   #e5e5e5; /* Primary text                               */
-  --color-granite:     #737373; /* Secondary text                             */
-  --color-silver:      #C0C0C0; /* Crystalline Silver — primary accent        */
-  --color-silver-dim:  #666666; /* Silver muted — decorative / secondary uses */
+  /* ── WIN2K COLOR PALETTE ────────────────────────────────────────────────── */
+  --color-win-gray:        #d4d0c8; /* Classic Windows desktop gray              */
+  --color-win-gray-light:  #ffffff; /* White highlight edge                       */
+  --color-win-gray-dark:   #808080; /* Shadow edge                                */
+  --color-win-gray-darker: #404040; /* Deep shadow                                */
+  --color-win-gray-btn:    #c0c0c0; /* Standard button face                       */
+  --color-win-gray-bg:     #d4d0c8; /* Window body / desktop                      */
+  --color-win-titlebar:    #0a246a; /* Classic Win2K navy title bar               */
+  --color-win-titlebar-end:#a6caf0; /* Title bar gradient end                     */
+  --color-win-text:        #000000; /* Primary text — black                       */
+  --color-win-text-inv:    #ffffff; /* Inverted text — on title bars              */
+  --color-win-blue:        #000080; /* Classic Windows navy link blue             */
+  --color-win-link:        #0000ee; /* Hyperlink blue                             */
+  --color-win-selected:    #316ac5; /* Selection highlight                        */
+  --color-win-selected-bg: #316ac5; /* Selected item background                   */
+  --color-win-disabled:    #808080; /* Disabled / grayed text                     */
+  --color-win-sunken-bg:   #ffffff; /* Sunken input field background              */
+  --color-win-green:       #008000; /* Status bar / positive indicator            */
+  --color-win-desktop:     #3a6ea5; /* Win2K default desktop blue                 */
 
-  /* ── BORDERS ────────────────────────────────────────────────────────────── */
-  --color-border:        rgba(255, 255, 255, 0.07);
-  --color-border-active: rgba(255, 255, 255, 0.12);
+  /* ── SEMANTIC ALIASES ───────────────────────────────────────────────────── */
+  --color-background:    var(--color-win-gray-bg);
+  --color-foreground:    var(--color-win-text);
+  --color-border:        var(--color-win-gray-dark);
+  --color-border-light:  var(--color-win-gray-light);
+  --color-accent:        var(--color-win-titlebar);
+  --color-accent-text:   var(--color-win-text-inv);
+
+  /* ── LEGACY TOKENS — kept for subpages (msa, privacy, terms) ───────────── */
+  --color-obsidian:    #050505;
+  --color-basalt:      #111111;
+  --color-basalt-lift: #161616;
+  --color-alabaster:   #e5e5e5;
+  --color-granite:     #737373;
+  --color-silver:      #C0C0C0;
+  --color-silver-dim:  #666666;
   --color-border-silver: rgba(192, 192, 192, 0.25);
 }
 
@@ -27,320 +51,329 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: none;
+  -moz-osx-font-smoothing: unset;
 }
 
 /* ── BASE ────────────────────────────────────────────────────────────────── */
+html {
+  scroll-behavior: smooth;
+}
+
 body {
-  background-color: var(--color-obsidian);
-  color: var(--color-alabaster);
-  font-family: var(--font-family-modern), monospace;
-  line-height: 1.7;
+  background-color: var(--color-win-desktop);
+  color: var(--color-win-text);
+  font-family: 'Tahoma', 'MS Sans Serif', Arial, sans-serif;
+  font-size: 11px;
+  line-height: 1.4;
   overflow-x: hidden;
+  cursor: default;
 }
 
-/* ── NOISE TEXTURE OVERLAY ───────────────────────────────────────────────── */
-/*    Fixed pseudo-element: GPU-composited, no repaint on scroll              */
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
-  opacity: 0.4;
-  transform: translateZ(0);
-  will-change: transform;
+/* ── SCROLLBAR — Windows 2000 classic ───────────────────────────────────── */
+::-webkit-scrollbar       { width: 16px; height: 16px; }
+::-webkit-scrollbar-track { background: var(--color-win-gray); }
+::-webkit-scrollbar-thumb {
+  background: var(--color-win-gray-btn);
+  border: 1px solid var(--color-win-gray-dark);
+  border-top-color: var(--color-win-gray-light);
+  border-left-color: var(--color-win-gray-light);
 }
-
-/* ── TYPOGRAPHY DEFAULTS ─────────────────────────────────────────────────── */
-h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-family-ancient), serif;
-  font-weight: 700;
-  line-height: 1.2;
-  letter-spacing: 0.05em;
+::-webkit-scrollbar-button {
+  background: var(--color-win-gray-btn);
+  border: 1px solid var(--color-win-gray-dark);
+  border-top-color: var(--color-win-gray-light);
+  border-left-color: var(--color-win-gray-light);
+  width: 16px;
+  height: 16px;
 }
-
-/* ── SCROLLBAR ───────────────────────────────────────────────────────────── */
-::-webkit-scrollbar       { width: 3px; }
-::-webkit-scrollbar-track { background: var(--color-obsidian); }
-::-webkit-scrollbar-thumb { background: var(--color-silver-dim); }
+::-webkit-scrollbar-corner { background: var(--color-win-gray); }
 
 /* ── SELECTION ───────────────────────────────────────────────────────────── */
 ::selection {
-  background-color: var(--color-silver);
-  color: var(--color-obsidian);
+  background-color: var(--color-win-selected);
+  color: var(--color-win-text-inv);
 }
 
-/* ── UTILITY CLASSES ─────────────────────────────────────────────────────── */
-.text-ancient { font-family: var(--font-family-ancient), serif; }
-.text-modern  { font-family: var(--font-family-modern),  monospace; }
-.sharp        { border-radius: 0 !important; }
-
-/* ── STONE CARD ──────────────────────────────────────────────────────────── */
-/*    Base card surface used across all sections                              */
-.stone-card {
-  background-color: var(--color-basalt);
-  border: 1px solid var(--color-border);
-  transition:
-    border-color  0.3s ease,
-    background    0.3s ease,
-    box-shadow    0.3s ease;
-  will-change: border-color, box-shadow;
+/* ── WIN2K 3D BORDER MIXINS ──────────────────────────────────────────────── */
+/* Raised (button-out) — light top/left, dark bottom/right */
+.win-raised {
+  border-style: solid;
+  border-width: 1px;
+  border-color:
+    var(--color-win-gray-light)
+    var(--color-win-gray-darker)
+    var(--color-win-gray-darker)
+    var(--color-win-gray-light);
+  outline: 1px solid;
+  outline-color: var(--color-win-gray) var(--color-win-gray-dark) var(--color-win-gray-dark) var(--color-win-gray);
+  background-color: var(--color-win-gray-btn);
 }
 
-.stone-card:hover {
-  background-color: var(--color-basalt-lift);
-  border-color: var(--color-border-silver);
-  box-shadow: 0 0 24px rgba(192, 192, 192, 0.06);
+/* Sunken (pressed / input) — dark top/left, light bottom/right */
+.win-sunken {
+  border-style: solid;
+  border-width: 1px;
+  border-color:
+    var(--color-win-gray-dark)
+    var(--color-win-gray-light)
+    var(--color-win-gray-light)
+    var(--color-win-gray-dark);
+  background-color: var(--color-win-sunken-bg);
 }
 
-/* Touch devices: suppress heavy hover effects */
-@media (hover: none) {
-  .stone-card:hover {
-    background-color: var(--color-basalt);
-    border-color: var(--color-border);
-    box-shadow: none;
-  }
+/* Window chrome — the outer raised box */
+.win-window {
+  background-color: var(--color-win-gray-bg);
+  border: 2px solid;
+  border-color:
+    var(--color-win-gray-light)
+    var(--color-win-gray-darker)
+    var(--color-win-gray-darker)
+    var(--color-win-gray-light);
+  box-shadow: 1px 1px 0 var(--color-win-gray-dark), -1px -1px 0 var(--color-win-gray);
 }
 
-/* ── MONOLITH BUTTON ─────────────────────────────────────────────────────── */
-/*    Sharp-edge CTA — Crystalline Silver treatment                           */
-.monolith-btn {
-  font-family: var(--font-family-modern), monospace;
+/* Window title bar */
+.win-titlebar {
+  background: linear-gradient(to right, #0a246a, #a6caf0);
+  color: #ffffff;
+  font-family: 'Tahoma', 'MS Sans Serif', Arial, sans-serif;
   font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.15em;
-  padding: 1rem 2.5rem;
-  border: 1px solid var(--color-silver);
-  background: transparent;
-  color: var(--color-silver);
+  font-weight: bold;
+  padding: 3px 6px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  user-select: none;
+  height: 22px;
+}
+
+/* Title bar controls */
+.win-titlebar-btn {
+  width: 16px;
+  height: 14px;
+  background: var(--color-win-gray-btn);
+  border: 1px solid;
+  border-color:
+    var(--color-win-gray-light)
+    var(--color-win-gray-darker)
+    var(--color-win-gray-darker)
+    var(--color-win-gray-light);
+  font-size: 9px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
-  position: relative;
-  overflow: hidden;
-  transition:
-    color       0.3s ease,
-    transform   0.2s ease;
+  color: var(--color-win-text);
+  font-family: 'Marlett', 'Tahoma', Arial, sans-serif;
 }
 
-/* Fill sweep — left to right on hover */
-.monolith-btn::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: var(--color-silver);
-  transform: translateX(-101%);
-  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+.win-titlebar-btn:active {
+  border-color:
+    var(--color-win-gray-darker)
+    var(--color-win-gray-light)
+    var(--color-win-gray-light)
+    var(--color-win-gray-darker);
 }
 
-.monolith-btn:hover {
-  color: var(--color-obsidian);
-  transform: translateY(-1px);
+/* Classic Win2K button */
+.win-btn {
+  background-color: var(--color-win-gray-btn);
+  color: var(--color-win-text);
+  font-family: 'Tahoma', 'MS Sans Serif', Arial, sans-serif;
+  font-size: 11px;
+  border: 1px solid;
+  border-color:
+    var(--color-win-gray-light)
+    var(--color-win-gray-darker)
+    var(--color-win-gray-darker)
+    var(--color-win-gray-light);
+  padding: 4px 16px;
+  cursor: pointer;
+  outline: 1px solid var(--color-win-gray-dark);
+  outline-offset: -2px;
+  min-width: 75px;
+  text-align: center;
 }
 
-.monolith-btn:hover::before {
-  transform: translateX(0);
+.win-btn:hover {
+  background-color: #e8e4dc;
 }
 
-/* Ensure text renders above the fill layer */
-.monolith-btn > * {
-  position: relative;
-  z-index: 1;
+.win-btn:active,
+.win-btn-active {
+  border-color:
+    var(--color-win-gray-darker)
+    var(--color-win-gray-light)
+    var(--color-win-gray-light)
+    var(--color-win-gray-darker);
+  padding: 5px 15px 3px 17px;
 }
 
-/* Touch devices */
-@media (hover: none) {
-  .monolith-btn:hover {
-    transform: none;
-  }
+.win-btn-default {
+  background-color: var(--color-win-gray-btn);
+  border: 2px solid var(--color-win-text);
+  outline: 1px solid var(--color-win-gray-dark);
+  outline-offset: -3px;
+  padding: 3px 15px;
 }
 
-/* ── HAIRLINE GRID SYSTEM ────────────────────────────────────────────────── */
-/*    1px gap grid pattern used across Fog, Identity, Systems, Footer        */
-.hairline-grid {
+.win-btn-default:hover { background-color: #e8e4dc; }
+
+/* ── MENU BAR ────────────────────────────────────────────────────────────── */
+.win-menubar {
+  background-color: var(--color-win-gray-bg);
+  border-bottom: 1px solid var(--color-win-gray-dark);
+  padding: 1px 2px;
+  display: flex;
+  gap: 0;
+  font-family: 'Tahoma', 'MS Sans Serif', Arial, sans-serif;
+  font-size: 11px;
+}
+
+.win-menu-item {
+  padding: 2px 6px;
+  cursor: default;
+}
+
+.win-menu-item:hover {
+  background-color: var(--color-win-selected);
+  color: var(--color-win-text-inv);
+}
+
+/* ── TOOLBAR ─────────────────────────────────────────────────────────────── */
+.win-toolbar {
+  background-color: var(--color-win-gray-bg);
+  border-bottom: 1px solid var(--color-win-gray-dark);
+  padding: 2px;
+  display: flex;
+  align-items: center;
   gap: 1px;
-  background-color: var(--color-border);
 }
 
-.hairline-grid > * {
-  background-color: var(--color-obsidian);
+/* ── STATUS BAR ──────────────────────────────────────────────────────────── */
+.win-statusbar {
+  background-color: var(--color-win-gray-bg);
+  border-top: 1px solid var(--color-win-gray-dark);
+  padding: 2px 4px;
+  font-family: 'Tahoma', 'MS Sans Serif', Arial, sans-serif;
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
-.hairline-grid--card > * {
-  background-color: var(--color-basalt);
+.win-statusbar-panel {
+  border: 1px solid;
+  border-color:
+    var(--color-win-gray-dark)
+    var(--color-win-gray-light)
+    var(--color-win-gray-light)
+    var(--color-win-gray-dark);
+  padding: 1px 6px;
+  font-size: 11px;
 }
 
-/* ── SECTION LABEL ───────────────────────────────────────────────────────── */
-.section-label {
-  font-family: var(--font-family-modern), monospace;
-  font-size: 10px;
-  letter-spacing: 0.35em;
-  color: var(--color-silver);
-  text-transform: uppercase;
+/* ── GROUP BOX ───────────────────────────────────────────────────────────── */
+.win-groupbox {
+  border: 1px solid var(--color-win-gray-dark);
+  border-top: none;
+  padding: 12px 10px 10px;
+  position: relative;
+  margin-top: 8px;
 }
 
-.section-label::before {
-  content: "— ";
-  color: var(--color-silver-dim);
+.win-groupbox-label {
+  position: absolute;
+  top: -8px;
+  left: 8px;
+  background: var(--color-win-gray-bg);
+  padding: 0 4px;
+  font-family: 'Tahoma', 'MS Sans Serif', Arial, sans-serif;
+  font-size: 11px;
+  color: var(--color-win-text);
 }
 
-/* ── SPOTLIGHT ANIMATION (Hero) ──────────────────────────────────────────── */
-@keyframes spotlight {
-  0%   { opacity: 0; transform: translate(-72%, -62%) scale(0.5); }
-  100% { opacity: 1; transform: translate(-50%, -40%) scale(1); }
+/* ── LISTBOX / TABLE VIEW ────────────────────────────────────────────────── */
+.win-listbox {
+  background: var(--color-win-sunken-bg);
+  border: 1px solid;
+  border-color:
+    var(--color-win-gray-dark)
+    var(--color-win-gray-light)
+    var(--color-win-gray-light)
+    var(--color-win-gray-dark);
+  font-family: 'Tahoma', 'MS Sans Serif', Arial, sans-serif;
+  font-size: 11px;
 }
 
-.animate-spotlight {
-  animation: spotlight 2s ease 0.75s 1 forwards;
+.win-listbox-item {
+  padding: 1px 4px;
+  cursor: default;
 }
 
-/* ── SHIMMER / SPIN (retained from Lucid ui components) ──────────────────── */
-@theme inline {
-  --animate-shimmer-slide: shimmer-slide var(--speed) ease-in-out infinite alternate;
-  --animate-spin-around:   spin-around calc(var(--speed) * 2) infinite linear;
-
-  @keyframes shimmer-slide {
-    to { transform: translate(calc(100cqw - 100%), 0); }
-  }
-
-  @keyframes spin-around {
-    0%         { transform: translateZ(0) rotate(0); }
-    15%, 35%   { transform: translateZ(0) rotate(90deg); }
-    65%, 85%   { transform: translateZ(0) rotate(270deg); }
-    100%       { transform: translateZ(0) rotate(360deg); }
-  }
+.win-listbox-item:hover,
+.win-listbox-item-selected {
+  background-color: var(--color-win-selected);
+  color: var(--color-win-text-inv);
 }
 
-/* ── SCAN LINE (retained for potential system card use) ──────────────────── */
-@keyframes scan-line {
-  0%       { left: -100%; }
-  50%, 100%{ left:  100%; }
+/* ── TOOLTIP ─────────────────────────────────────────────────────────────── */
+.win-tooltip {
+  background-color: #ffffe1;
+  border: 1px solid var(--color-win-text);
+  padding: 2px 6px;
+  font-family: 'Tahoma', 'MS Sans Serif', Arial, sans-serif;
+  font-size: 11px;
+  color: var(--color-win-text);
+  pointer-events: none;
 }
 
-.animate-scan-line {
-  animation: scan-line 3s linear infinite;
+/* ── SEPARATOR ───────────────────────────────────────────────────────────── */
+.win-separator {
+  border: none;
+  border-top: 1px solid var(--color-win-gray-dark);
+  border-bottom: 1px solid var(--color-win-gray-light);
+  margin: 4px 0;
 }
 
-/* ── SACRED GEOMETRY ROTATION (Hero background rings) ───────────────────── */
-@keyframes geo-rotate {
-  from { transform: translate(-50%, -50%) rotate(0deg); }
-  to   { transform: translate(-50%, -50%) rotate(360deg); }
+/* ── SECTION RHYTHM ──────────────────────────────────────────────────────── */
+.win-section {
+  background-color: var(--color-win-gray-bg);
+  padding: 24px;
 }
 
-@keyframes geo-rotate-reverse {
-  from { transform: translate(-50%, -50%) rotate(0deg); }
-  to   { transform: translate(-50%, -50%) rotate(-360deg); }
-}
-
-.animate-geo-rotate         { animation: geo-rotate         120s linear infinite; }
-.animate-geo-rotate-reverse { animation: geo-rotate-reverse  60s linear infinite; }
-
-/* ── SCROLL INDICATOR PULSE ──────────────────────────────────────────────── */
-@keyframes scroll-pulse {
-  0%, 100% { opacity: 0.3; transform: scaleY(1); }
-  50%       { opacity: 1;   transform: scaleY(0.6); }
-}
-
-.animate-scroll-pulse {
-  animation: scroll-pulse 2s ease-in-out infinite;
-}
-
-/* ── MOBILE OPTIMISATIONS ────────────────────────────────────────────────── */
-@media (max-width: 768px) {
-  /* Reduce noise texture cost on mobile */
-  body::before {
-    opacity: 0.2;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.5' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
-  }
-}
+/* ── LEGACY FONT UTILITIES — kept for subpages ───────────────────────────── */
+.font-ancient { font-family: 'Tahoma', 'MS Sans Serif', Arial, sans-serif; }
+.font-modern  { font-family: 'Tahoma', 'MS Sans Serif', Arial, sans-serif; }
 
 /* ── REDUCED MOTION ──────────────────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
   *::after {
-    animation-duration:       0.01ms !important;
-    animation-iteration-count: 1     !important;
+    animation-duration:        0.01ms !important;
+    animation-iteration-count: 1      !important;
     transition-duration:       0.01ms !important;
-    scroll-behavior:           auto  !important;
+    scroll-behavior:           auto   !important;
   }
 }
 
-/* ── SECTION RHYTHM ──────────────────────────────────────────────────────── */
-/*    Alternating surface treatment — creates visual breathing room          */
-.section-surface-alt {
-  background-color: var(--color-basalt);
-  position: relative;
-}
-
-/* ── GEOMETRIC LINE PATTERNS ─────────────────────────────────────────────── */
-/*    Subtle SVG grid overlay for key sections — GPU composited              */
-.geo-grid-overlay::before {
+/* ── DESKTOP WALLPAPER PATTERN ───────────────────────────────────────────── */
+body::before {
   content: "";
-  position: absolute;
+  position: fixed;
   inset: 0;
+  z-index: -1;
   pointer-events: none;
-  z-index: 0;
-  background-image:
-    linear-gradient(rgba(192,192,192,0.025) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(192,192,192,0.025) 1px, transparent 1px);
-  background-size: 80px 80px;
-  mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 40%, transparent 100%);
-  -webkit-mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 40%, transparent 100%);
+  background-color: #3a6ea5;
 }
 
-/* Diagonal variant — used on Identity */
-.geo-diagonal-overlay::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-  background-image:
-    repeating-linear-gradient(
-      45deg,
-      rgba(192,192,192,0.018) 0px,
-      rgba(192,192,192,0.018) 1px,
-      transparent 1px,
-      transparent 60px
-    );
-  mask-image: radial-gradient(ellipse 70% 70% at 50% 50%, black 30%, transparent 100%);
-  -webkit-mask-image: radial-gradient(ellipse 70% 70% at 50% 50%, black 30%, transparent 100%);
-}
-
-/* Corner accent lines — used on TheFog */
-.geo-corner-accent::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 200px;
-  height: 200px;
-  pointer-events: none;
-  z-index: 0;
-  background:
-    linear-gradient(rgba(192,192,192,0.04) 1px, transparent 1px) 0 0 / 20px 20px,
-    linear-gradient(90deg, rgba(192,192,192,0.04) 1px, transparent 1px) 0 0 / 20px 20px;
-  mask-image: radial-gradient(circle at top right, black 0%, transparent 70%);
-  -webkit-mask-image: radial-gradient(circle at top right, black 0%, transparent 70%);
-}
-
-/* ── FINALCTA BOOST ──────────────────────────────────────────────────────── */
-.cta-glow-strong {
-  background: radial-gradient(
-    ellipse 60% 50% at 50% 50%,
-    rgba(192,192,192,0.07) 0%,
-    rgba(192,192,192,0.03) 40%,
-    transparent 70%
-  );
-}
-
-/* ── REDUCED MOTION — geometry overlays ─────────────────────────────────── */
-@media (prefers-reduced-motion: reduce) {
-  .geo-grid-overlay::before,
-  .geo-diagonal-overlay::before,
-  .geo-corner-accent::after {
-    display: none;
+/* ── MOBILE ADJUSTMENTS ──────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  body {
+    font-size: 11px;
   }
 }
